@@ -9,15 +9,22 @@ public class ball : MonoBehaviour
     public Transform cameraAngle;
     public Transform bodyAngle;
 
+
     Vector3 appliedForce;
 
     void OnTriggerEnter(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
-            rb.velocity = new Vector3(0, 0, 0);
-            appliedForce = new Vector3(kickForce * (1 - Mathf.Abs(cameraAngle.rotation.eulerAngles.x / 90)) * (1 - Mathf.Abs(bodyAngle.rotation.eulerAngles.y - 90) / 90), kickForce * cameraAngle.rotation.eulerAngles.x / 90 * -1f + 10f, kickForce * ((bodyAngle.rotation.eulerAngles.y - 90) / 90));
-            rb.AddForce(appliedForce * -1f);
+            kickForce = collision.gameObject.GetComponent<HandsManagment>().currentKickForce;
+            if(kickForce > 0 )
+            {
+                rb.velocity = new Vector3(0, 0, 0);
+            }
+            //appliedForce = new Vector3(kickForce * (1 - Mathf.Abs(cameraAngle.rotation.eulerAngles.x / 90)) * (1 - Mathf.Abs(bodyAngle.rotation.eulerAngles.y - 90) / 90), kickForce * cameraAngle.rotation.eulerAngles.x / 90 * -1f + 10f, kickForce * ((bodyAngle.rotation.eulerAngles.y - 90) / 90));
+            appliedForce = collision.gameObject.transform.up* kickForce;
+            rb.AddForce(appliedForce);
+            Debug.Log(appliedForce);
         }
 
         if (collision.CompareTag("Wall"))

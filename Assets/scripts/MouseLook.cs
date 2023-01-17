@@ -8,6 +8,9 @@ public class MouseLook : MonoBehaviour
 
     public Transform playerBody;
 
+    public GameObject BottomHandsPosition;
+    public GameObject TopHandsPosition;
+
     float xRotation = 0f;
 
     void Start()
@@ -24,5 +27,23 @@ public class MouseLook : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
+
+        if(transform.rotation.x >0)
+        {
+            if (TopHandsPosition.active)
+            {
+                TopHandsPosition.SetActive(false);
+                BottomHandsPosition.SetActive(true);
+            }
+                
+        }
+        else
+        {
+            if(BottomHandsPosition.active)
+            {
+                TopHandsPosition.SetActive(true);
+                BottomHandsPosition.SetActive(false);
+            }
+        }
     }
 }
