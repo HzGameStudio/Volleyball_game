@@ -10,16 +10,15 @@ public class HandsManagment : MonoBehaviour
 
     public float currentTime = 0f;
 
-    public float minKickForce;
+    private float minKickForce;
     public float maxKickForce;
 
     public float currentKickForce;
 
-    public Timer_script Timer;
-
     private void Start()
     {
         currentKickForce = 0;
+        minKickForce = maxKickForce * 0.8f;
     }
 
     // Update is called once per frame
@@ -28,7 +27,6 @@ public class HandsManagment : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             kickStarded = true;
-            Timer.Set_timer(kickTime);
 
         }
 

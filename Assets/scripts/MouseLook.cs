@@ -30,7 +30,7 @@ public class MouseLook : MonoBehaviour
 
         if(transform.rotation.x >0)
         {
-            if (TopHandsPosition.active)
+            if (TopHandsPosition.active || !BottomHandsPosition.active)
             {
                 TopHandsPosition.SetActive(false);
                 BottomHandsPosition.SetActive(true);
@@ -39,7 +39,7 @@ public class MouseLook : MonoBehaviour
         }
         else
         {
-            if(BottomHandsPosition.active)
+            if(BottomHandsPosition.active || !TopHandsPosition.active)
             {
                 TopHandsPosition.SetActive(true);
                 BottomHandsPosition.SetActive(false);

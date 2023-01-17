@@ -61,6 +61,6 @@ public class Timer_script : MonoBehaviour
         float time_percent = cur_time_left / duration_time;
         Time_sprite.localScale = new Vector3(time_percent * 2.8f, 0.8f, 0f);
         //Health_bar.position = Vector3.zero;
-        Time_sprite.localPosition = new Vector3(-1.4f * (1 - time_percent), 0f, 0f);
+        Time_sprite.position = new Vector3(-1.4f * (1 - time_percent), 0f, 0f);
     }
 }
