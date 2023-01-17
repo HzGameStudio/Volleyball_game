@@ -8215,8 +8215,8 @@ MonoBehaviour:
   currentValue: 0.5
   minValueNormalased: 0
   maxValueNormalased: 1
-  maxForceMultiplaur: 1400
-  minForceMultiplaur: 500
+  maxForceMultiplaur: 2000
+  minForceMultiplaur: 1000
   step: 0.05
   TopHands: {fileID: 927319881}
   BottomHands: {fileID: 817047098}

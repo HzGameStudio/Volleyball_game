@@ -9,29 +9,47 @@ public class ball : MonoBehaviour
     public Transform cameraAngle;
     public Transform bodyAngle;
 
+    private bool isKicked = false;
+
 
     Vector3 appliedForce;
 
-    void OnTriggerEnter(Collider collision)
+    void OnTriggerStay(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
-            kickForce = collision.gameObject.GetComponent<HandsManagment>().currentKickForce;
-            if(kickForce > 0 )
+            if(!isKicked)
             {
-                rb.velocity = new Vector3(0, 0, 0);
+                kickForce = collision.gameObject.GetComponent<HandsManagment>().currentKickForce;
+                if (kickForce > 0)
+                {
+                    rb.velocity = new Vector3(0, 0, 0);
+                }
+                //appliedForce = new Vector3(kickForce * (1 - Mathf.Abs(cameraAngle.rotation.eulerAngles.x / 90)) * (1 - Mathf.Abs(bodyAngle.rotation.eulerAngles.y - 90) / 90), kickForce * cameraAngle.rotation.eulerAngles.x / 90 * -1f + 10f, kickForce * ((bodyAngle.rotation.eulerAngles.y - 90) / 90));
+                appliedForce = collision.gameObject.transform.up * kickForce;
+                rb.AddForce(appliedForce);
+                Debug.Log(appliedForce);
+                if (appliedForce.magnitude != 0)
+                {
+                    isKicked = true;
+                }
             }
-            //appliedForce = new Vector3(kickForce * (1 - Mathf.Abs(cameraAngle.rotation.eulerAngles.x / 90)) * (1 - Mathf.Abs(bodyAngle.rotation.eulerAngles.y - 90) / 90), kickForce * cameraAngle.rotation.eulerAngles.x / 90 * -1f + 10f, kickForce * ((bodyAngle.rotation.eulerAngles.y - 90) / 90));
-            appliedForce = collision.gameObject.transform.up* kickForce;
-            rb.AddForce(appliedForce);
-            Debug.Log(appliedForce);
+           
         }
+    }
 
-        if (collision.CompareTag("Wall"))
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Wall"))
         {
             appliedForce = new Vector3(-400f - transform.position.x * 8, 400f, 0f);
             rb.AddForce(appliedForce);
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isKicked= false;
     }
 
 }    
