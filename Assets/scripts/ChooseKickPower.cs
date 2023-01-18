@@ -19,6 +19,8 @@ public class ChooseKickPower : MonoBehaviour
     public HandsManagment TopHands;
     public HandsManagment BottomHands;
 
+    public Gradient gradient;
+
     // Update is called once per frame
     void Update()
     {
@@ -28,6 +30,7 @@ public class ChooseKickPower : MonoBehaviour
         else if(currentValue < minValueNormalased) currentValue= minValueNormalased;
 
         gameObject.GetComponent<Image>().fillAmount = currentValue;
+        gameObject.GetComponent<Image>().color = gradient.Evaluate(currentValue);
         
         if(Input.mouseScrollDelta.y !=0)
         {

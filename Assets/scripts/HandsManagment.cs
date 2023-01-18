@@ -6,12 +6,19 @@ public class HandsManagment : MonoBehaviour
 {
     public float kickTime;
 
+    public Transform idealKickPoint;
+    public Transform ball;
+
     private bool kickStarded = false;
+    private bool refilingKick = false;
 
     public float currentTime = 0f;
 
     private float minKickForce;
     public float maxKickForce;
+
+    private float realMaxKickForce;
+    private float realMinKickForce;
 
     public float currentKickForce;
 
@@ -26,7 +33,12 @@ public class HandsManagment : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            kickStarded = true;
+            if(!refilingKick)
+            {
+                kickStarded = true;
+                GetRealKickForce(); 
+            }
+           
 
         }
 
@@ -35,7 +47,7 @@ public class HandsManagment : MonoBehaviour
 
     private void TimerCalculate()
     {
-        if (kickStarded)
+        if (kickStarded && !refilingKick)
         {
             currentTime += Time.deltaTime;
             if(currentTime<=kickTime)
@@ -45,14 +57,34 @@ public class HandsManagment : MonoBehaviour
             else
             {
                 currentKickForce = 0f;
-                currentTime = 0f;
                 kickStarded = false;
+                refilingKick = true;
+            }
+        }
+        else if(refilingKick)
+        {
+            if(currentTime>0)
+            {
+                currentTime -= Time.deltaTime / 2;
+
+            }else
+            {
+                currentTime = 0f;
+                refilingKick = false;
             }
         }
     }
 
     private void ChangeKickForce()
     {
-        currentKickForce = maxKickForce - currentTime / kickTime * (maxKickForce - minKickForce);
+        currentKickForce = realMaxKickForce - currentTime / kickTime * (realMaxKickForce - realMinKickForce);
+    }
+
+    private void GetRealKickForce()
+    {
+        float distance = Vector3.Distance(ball.position, idealKickPoint.position);
+
+        realMaxKickForce = maxKickForce / (5 + distance)*5;
+        realMinKickForce = realMaxKickForce * 0.95f;
     }
 }

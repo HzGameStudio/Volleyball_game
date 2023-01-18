@@ -28,22 +28,22 @@ public class MouseLook : MonoBehaviour
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
 
-        if(transform.rotation.x >0)
-        {
-            if (TopHandsPosition.active || !BottomHandsPosition.active)
-            {
-                TopHandsPosition.SetActive(false);
-                BottomHandsPosition.SetActive(true);
-            }
+        //if(transform.rotation.x >0)
+        //{
+        //    if (TopHandsPosition.active || !BottomHandsPosition.active)
+        //    {
+        //        TopHandsPosition.SetActive(false);
+        //        BottomHandsPosition.SetActive(true);
+        //    }
                 
-        }
-        else
-        {
-            if(BottomHandsPosition.active || !TopHandsPosition.active)
-            {
-                TopHandsPosition.SetActive(true);
-                BottomHandsPosition.SetActive(false);
-            }
-        }
+        //}
+        //else
+        //{
+        //    if(BottomHandsPosition.active || !TopHandsPosition.active)
+        //    {
+        //        TopHandsPosition.SetActive(true);
+        //        BottomHandsPosition.SetActive(false);
+        //    }
+        //}
     }
 }
