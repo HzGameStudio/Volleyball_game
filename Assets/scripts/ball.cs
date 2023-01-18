@@ -10,6 +10,7 @@ public class ball : MonoBehaviour
     public Transform bodyAngle;
 
     private bool isKicked = false;
+    bool onPlatform = false;
 
 
     Vector3 appliedForce;
@@ -25,10 +26,9 @@ public class ball : MonoBehaviour
                 {
                     rb.velocity = new Vector3(0, 0, 0);
                 }
-                //appliedForce = new Vector3(kickForce * (1 - Mathf.Abs(cameraAngle.rotation.eulerAngles.x / 90)) * (1 - Mathf.Abs(bodyAngle.rotation.eulerAngles.y - 90) / 90), kickForce * cameraAngle.rotation.eulerAngles.x / 90 * -1f + 10f, kickForce * ((bodyAngle.rotation.eulerAngles.y - 90) / 90));
                 appliedForce = collision.gameObject.transform.up * kickForce;
                 rb.AddForce(appliedForce);
-                Debug.Log(appliedForce);
+                //Debug.Log(appliedForce);
                 if (appliedForce.magnitude != 0)
                 {
                     isKicked = true;
@@ -38,18 +38,21 @@ public class ball : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    
+
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Wall"))
+        isKicked= false;
+        if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
-            appliedForce = new Vector3(-400f - transform.position.x * 8, 400f, 0f);
-            rb.AddForce(appliedForce);
+            rb.AddForce(-1000f - transform.position.x * 28f, 1600f, transform.position.z * -20f);
+            onPlatform = true;
+            Invoke("NotOnPlatform", 0.1f);
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+   void NotOnPlatform()
     {
-        isKicked= false;
+        onPlatform = false;
     }
-
 }    

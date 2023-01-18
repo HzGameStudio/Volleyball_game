@@ -17,7 +17,7 @@ public class IdealPointUI : MonoBehaviour
     void Update()
     {
         currentDistance = Vector3.Distance(ball.position, idealPoint.position);
-        Debug.Log(currentDistance);
+        //Debug.Log(currentDistance);
         if(currentDistance<minAnimatedDistance)
         {
             gameObject.GetComponent<Image>().fillAmount = currentDistance / minAnimatedDistance;
