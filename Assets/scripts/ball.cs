@@ -45,7 +45,8 @@ public class ball : MonoBehaviour
         isKicked= false;
         if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
-            rb.AddForce(-1000f - transform.position.x * 28f, 1600f, transform.position.z * -20f);
+            //rb.AddForce(-1000f - transform.position.x * 28f, 1600f, transform.position.z * -20f);
+            rb.velocity = new Vector3(rb.velocity.x * -1.2f - 8f, rb.velocity.y * 2.8f, rb.velocity.z * -1.5f);
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
         }
