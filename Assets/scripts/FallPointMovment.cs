@@ -8,13 +8,13 @@ public class FallPointMovment : MonoBehaviour
 
     public Rigidbody rb;
 
-    void Update()
+    /*void Update()
     {
         if(rb.velocity.y>0)
         {
             fallPoint.position = GetFallPointPosotion();
         }
-    }
+    }*/
 
     private Vector3 GetFallPointPosotion()
     {
@@ -41,7 +41,7 @@ public class FallPointMovment : MonoBehaviour
         fallPoint.x = x + flyingTime * velocityX;
         fallPoint.z = z + flyingTime* velocityZ;
 
-        Debug.Log(fallPoint);
+        //Debug.Log(fallPoint);
 
         return fallPoint;
 

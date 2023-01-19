@@ -10,8 +10,8 @@ public class ball : MonoBehaviour
     public Transform bodyAngle;
 
     private bool isKicked = false;
-    bool onPlatform = false;
 
+    
 
     Vector3 appliedForce;
 
@@ -38,15 +38,44 @@ public class ball : MonoBehaviour
         }
     }
 
-    
+    bool onPlatform = false;
+
+    public float xMin = -25f;
+    public float xMax = -15f;
+    public float yMin = -20f;
+    public float yMax = 20f;
+    public float maxHeight = 50f;
+
+    float gravity = 30f;
+    float xStart;
+    float zStart;
+    float xEnd;
+    float zEnd;
+    float flyingTime;
+    float vX;
+    float vY;
+    float vZ;
 
     private void OnCollisionEnter(Collision collision)
     {
         isKicked= false;
         if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
-            //rb.AddForce(-1000f - transform.position.x * 28f, 1600f, transform.position.z * -20f);
-            rb.velocity = new Vector3(rb.velocity.x * -1.2f - 8f, rb.velocity.y * 2.8f, rb.velocity.z * -1.5f);
+
+            xStart = transform.position.x;
+            zStart = transform.position.z;
+            xEnd = Random.Range(xMin, xMax);
+            zEnd = Random.Range(yMin, yMax);
+
+            flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
+            Debug.Log(flyingTime);
+
+            vY = gravity * flyingTime / 2;
+            vX = (xEnd - xStart) / flyingTime;
+            vZ = (zEnd - zStart) / flyingTime;
+
+            rb.velocity = new Vector3(vX, vY, vZ);
+
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
         }
