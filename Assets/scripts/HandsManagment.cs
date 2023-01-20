@@ -22,6 +22,9 @@ public class HandsManagment : MonoBehaviour
 
     public float currentKickForce;
 
+    public GameObject LeftArm;
+    public GameObject RightArm;
+
     private void Start()
     {
         currentKickForce = 0;
@@ -36,7 +39,9 @@ public class HandsManagment : MonoBehaviour
             if(!refilingKick)
             {
                 kickStarded = true;
-                GetRealKickForce(); 
+                GetRealKickForce();
+                LeftArm.GetComponent<TriggerR>().TriggerKick();
+                RightArm.GetComponent<TriggerR>().TriggerKick();
             }
            
 
