@@ -8,13 +8,21 @@ public class FallPointMovment : MonoBehaviour
 
     public Rigidbody rb;
 
-    /*void Update()
+    private bool flag = true;
+
+    void Update()
     {
-        if(rb.velocity.y>0)
+        if(rb.velocity.y>0 && gameObject.transform.position.x > 0 && flag)
         {
+            
             fallPoint.position = GetFallPointPosotion();
+            flag = false;
         }
-    }*/
+        else if(gameObject.transform.position.x<0 && rb.velocity.x<0)
+        {
+            flag = true;
+        }
+    }
 
     private Vector3 GetFallPointPosotion()
     {

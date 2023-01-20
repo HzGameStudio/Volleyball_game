@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2611179699515735871}
   - component: {fileID: 2611179699515735870}
   - component: {fileID: 2611179699515735856}
+  - component: {fileID: 8576890880674779831}
   m_Layer: 0
   m_Name: ball
   m_TagString: Untagged
@@ -145,3 +146,22 @@ MonoBehaviour:
   kickForce: 800
   cameraAngle: {fileID: 0}
   bodyAngle: {fileID: 0}
+  xMin: -25
+  xMax: -15
+  yMin: -20
+  yMax: 20
+  maxHeight: 50
+--- !u!114 &8576890880674779831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2611179699515735865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c3e220cdcf6c14fa7529a57dfce62b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fallPoint: {fileID: 0}
+  rb: {fileID: 2611179699515735870}

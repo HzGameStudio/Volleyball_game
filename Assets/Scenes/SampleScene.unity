@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18154639, g: 0.22718686, b: 0.30740482, a: 1}
+  m_IndirectSpecularColor: {r: 0.18154654, g: 0.22718707, b: 0.30740517, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8209,20 +8209,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2611179699515735859, guid: 9b29e1c48d7ce7b46aeddd6d16393700, type: 3}
   m_PrefabInstance: {fileID: 2611179700256855274}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1826483163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1826483155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52c3e220cdcf6c14fa7529a57dfce62b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fallPoint: {fileID: 659485761}
-  rb: {fileID: 1826483156}
 --- !u!1 &1826988781
 GameObject:
   m_ObjectHideFlags: 0
@@ -10281,6 +10267,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8576890880674779831, guid: 9b29e1c48d7ce7b46aeddd6d16393700, type: 3}
+      propertyPath: fallPoint
+      value: 
+      objectReference: {fileID: 659485761}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b29e1c48d7ce7b46aeddd6d16393700, type: 3}
 --- !u!4 &3791534574372322038
