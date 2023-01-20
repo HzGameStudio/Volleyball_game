@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
+  - topHands
+  - bottomHands
   layers:
   - Default
   - TransparentFX

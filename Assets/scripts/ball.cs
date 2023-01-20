@@ -17,7 +17,7 @@ public class ball : MonoBehaviour
 
     void OnTriggerStay(Collider collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("topHands"))
         {
             if(!isKicked)
             {
@@ -35,6 +35,21 @@ public class ball : MonoBehaviour
                 }
             }
            
+        }
+        else if(collision.CompareTag("bottomHands"))
+        {
+            kickForce = collision.gameObject.GetComponent<HandsManagerBottomPosition>().currentKickForce;
+            if (kickForce > 0)
+            {
+                rb.velocity = new Vector3(0, 0, 0);
+            }
+            appliedForce = collision.gameObject.transform.up * kickForce;
+            rb.AddForce(appliedForce);
+            //Debug.Log(appliedForce);
+            if (appliedForce.magnitude != 0)
+            {
+                isKicked = true;
+            }
         }
     }
 
