@@ -70,7 +70,7 @@ public class HandsManagment : MonoBehaviour
         {
             if(currentTime>0)
             {
-                currentTime -= Time.deltaTime / 2;
+                currentTime -= Time.deltaTime / 1.3f;
 
             }else
             {

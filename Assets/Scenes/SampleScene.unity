@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18154639, g: 0.22718686, b: 0.30740482, a: 1}
+  m_IndirectSpecularColor: {r: 0.18154654, g: 0.22718707, b: 0.30740517, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4288,7 +4288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26da2de1c92b9e24d8e15c424899c11d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kickTime: 0.6
+  kickTime: 0.3
   idealKickPoint: {fileID: 1900686134}
   ball: {fileID: 1826483162}
   currentTime: 0
