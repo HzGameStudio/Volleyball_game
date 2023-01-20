@@ -7,7 +7,9 @@ public class IdealPointUI : MonoBehaviour
     public Gradient gradient;
     
     public Transform ball;
-    public Transform idealPoint;
+    public Transform idealPointTopHandsPosition;
+    public Transform idealPointBottomHandsPosition;
+    public ChangeHandsPosition script;
 
     public float minAnimatedDistance;
 
@@ -16,7 +18,15 @@ public class IdealPointUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentDistance = Vector3.Distance(ball.position, idealPoint.position);
+        if(script.positionFlag)
+        {
+            currentDistance = Vector3.Distance(ball.position, idealPointBottomHandsPosition.position);
+        }
+        else
+        {
+            currentDistance = Vector3.Distance(ball.position, idealPointTopHandsPosition.position);
+        }
+        
         //Debug.Log(currentDistance);
         if(currentDistance<minAnimatedDistance)
         {

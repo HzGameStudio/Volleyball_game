@@ -8,7 +8,7 @@ public class KickEfectUI : MonoBehaviour
     // Update is called once per frame
 
     public HandsManagment topHandsManager;
-    public HandsManagment bottomHandsManager;
+    public HandsManagerBottomPosition bottomHandsManager;
 
     void Update()
     {
