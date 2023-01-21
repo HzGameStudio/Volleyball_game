@@ -17,25 +17,31 @@ public class ChooseKickPower : MonoBehaviour
     public float step;
 
     public HandsManagment TopHands;
-    public HandsManagment BottomHands;
+    public GameObject TopHandsGameObject;
+    //public HandsManagment BottomHands;
 
     public Gradient gradient;
 
     // Update is called once per frame
     void Update()
     {
-        currentValue += step * Input.mouseScrollDelta.y;
-
-        if(currentValue > maxValueNormalased) currentValue= maxValueNormalased;
-        else if(currentValue < minValueNormalased) currentValue= minValueNormalased;
-
-        gameObject.GetComponent<Image>().fillAmount = currentValue;
-        gameObject.GetComponent<Image>().color = gradient.Evaluate(currentValue);
-        
-        if(Input.mouseScrollDelta.y !=0)
+        if (TopHandsGameObject.active)
         {
-            TopHands.maxKickForce = minForceMultiplaur+  currentValue * (maxForceMultiplaur-minForceMultiplaur);
-            BottomHands.maxKickForce = minForceMultiplaur + currentValue * (maxForceMultiplaur - minForceMultiplaur);
+            currentValue += step * Input.mouseScrollDelta.y;
+
+            if (currentValue > maxValueNormalased) currentValue = maxValueNormalased;
+            else if (currentValue < minValueNormalased) currentValue = minValueNormalased;
+
+            gameObject.GetComponent<Image>().fillAmount = currentValue;
+            gameObject.GetComponent<Image>().color = gradient.Evaluate(currentValue);
+
+            //Debug.Log(TopHandsGameObject.active);
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                TopHands.maxKickForce = minForceMultiplaur + currentValue * (maxForceMultiplaur - minForceMultiplaur);
+                //BottomHands.maxKickForce = minForceMultiplaur + currentValue * (maxForceMultiplaur - minForceMultiplaur);
+            }
         }
+       
     }
 }
