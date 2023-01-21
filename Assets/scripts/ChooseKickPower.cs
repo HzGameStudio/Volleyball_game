@@ -14,7 +14,7 @@ public class ChooseKickPower : MonoBehaviour
     public float maxForceMultiplaur;
     public float minForceMultiplaur;
 
-    public float step;
+    public static float step = 2f;
 
     public HandsManagment TopHands;
     public GameObject TopHandsGameObject;

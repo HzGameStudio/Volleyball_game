@@ -6,7 +6,7 @@ public class ChangeBottomPosition : MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform bottomHandPosition;
-    public float step;
+    public static float step = 2f;
 
     public float minAngle;
     public float maxAngle;
