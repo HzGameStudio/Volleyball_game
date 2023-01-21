@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ball : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class ball : MonoBehaviour
 
     private bool isKicked = false;
 
-    
+    public TextMeshProUGUI score;
+    int points = 0;
+
 
     Vector3 appliedForce;
 
@@ -83,7 +86,6 @@ public class ball : MonoBehaviour
             zEnd = Random.Range(yMin, yMax);
 
             flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
-            Debug.Log(flyingTime);
 
             vY = gravity * flyingTime / 2;
             vX = (xEnd - xStart) / flyingTime;
@@ -93,6 +95,16 @@ public class ball : MonoBehaviour
 
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
+            points += 1;
+            score.text = points.ToString();
+        }
+
+        if (collision.gameObject.CompareTag("field") && !onPlatform)
+        {
+            points = 0;
+            score.text = points.ToString();
+            rb.velocity = new Vector3(0, 0, 0);
+            transform.position = new Vector3(21, 35, 0);
         }
     }
 

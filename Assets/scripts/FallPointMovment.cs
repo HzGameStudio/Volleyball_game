@@ -10,7 +10,7 @@ public class FallPointMovment : MonoBehaviour
 
     private bool flag = true;
 
-    void Update()
+    /*void Update()
     {
         if(gameObject.transform.position.x > 0 && flag)
         {
@@ -22,7 +22,7 @@ public class FallPointMovment : MonoBehaviour
         {
             flag = true;
         }
-    }
+    }*/
 
     private Vector3 GetFallPointPosotion()
     {
