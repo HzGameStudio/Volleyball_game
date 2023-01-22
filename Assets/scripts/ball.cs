@@ -10,14 +10,26 @@ public class ball : MonoBehaviour
     public Transform cameraAngle;
     public Transform bodyAngle;
 
-    private bool isKicked = false;
+    public bool isKicked = false;
 
     public TextMeshProUGUI score;
     int points = 0;
 
+    public float Ballgravity;
+
+
+    //public FallPointMovment fallPointMovmentScript;
 
     Vector3 appliedForce;
 
+
+    //private void Update()
+    //{
+    //    Vector3 speed = rb.velocity;
+    //    speed.y += Ballgravity * Time.deltaTime;
+
+    //    rb.velocity = speed;
+    //}
     void OnTriggerStay(Collider collision)
     {
         if (collision.CompareTag("topHands"))
@@ -36,6 +48,8 @@ public class ball : MonoBehaviour
                 {
                     isKicked = true;
                 }
+
+                //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
             }
            
         }
@@ -53,7 +67,13 @@ public class ball : MonoBehaviour
             {
                 isKicked = true;
             }
+            //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        isKicked = false;
     }
 
     bool onPlatform = false;
@@ -74,9 +94,11 @@ public class ball : MonoBehaviour
     float vY;
     float vZ;
 
+    public TeamPlaing team;
+
     private void OnCollisionEnter(Collision collision)
     {
-        isKicked= false;
+        //isKicked = false;
         if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
 
