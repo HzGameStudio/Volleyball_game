@@ -29,7 +29,7 @@ public class SettingsMenu : MonoBehaviour
 
     public void SetScrollSens(float sens)
     {
-        ChooseKickPower.step = sens;
+        ChooseKickPower.step = sens / 40f;
         ChangeBottomPosition.step = sens;
         sSense = sens;
         sense1UI.text = sens.ToString("0");

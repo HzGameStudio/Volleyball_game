@@ -14,7 +14,7 @@ public class ChooseKickPower : MonoBehaviour
     public float maxForceMultiplaur;
     public float minForceMultiplaur;
 
-    public static float step = 2f;
+    public static float step = 0.05f;
 
     public HandsManagment TopHands;
     public GameObject TopHandsGameObject;
@@ -25,6 +25,7 @@ public class ChooseKickPower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (TopHandsGameObject.active)
         {
             currentValue += step * Input.mouseScrollDelta.y;
