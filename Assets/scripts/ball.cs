@@ -84,6 +84,8 @@ public class ball : MonoBehaviour
             zStart = transform.position.z;
             xEnd = Random.Range(xMin, xMax);
             zEnd = Random.Range(yMin, yMax);
+            Test.xPos = xEnd;
+            Test.zPos = zEnd;
 
             flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
 
