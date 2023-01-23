@@ -11,6 +11,8 @@ public class BotBasicData : MonoBehaviour
     public Transform transform;
     public Vector3 targetPosition;
 
+    public bool isRaning = false;
+
     public float travelVelocity;
     public float timeOfReaction;
 
@@ -42,10 +44,12 @@ public class BotBasicData : MonoBehaviour
             if (distance > speed.magnitude)
             {
                 transform.position += speed;
+                isRaning = true;
             }
             else
             {
                 transform.position = targetPosition;
+                isRaning = false;
             }
         }
     }
@@ -175,6 +179,12 @@ public class BotBasicData : MonoBehaviour
                 currentTimeOfReaction = 0f;
             }
         }
+    }
+
+    public void Teleport()
+    {
+        transform.position = targetPosition;
+        isRaning = false;
     }
 
 }

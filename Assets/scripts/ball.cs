@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class ball : MonoBehaviour
 {
@@ -12,8 +13,10 @@ public class ball : MonoBehaviour
 
     public bool isKicked = false;
 
-    public TextMeshProUGUI score;
-    int points = 0;
+    public TextMeshProUGUI BotScore;
+    int BotPoints = 0;
+    public TextMeshProUGUI PlayerScore;
+    int PlayerPoints = 0;
 
     public float Ballgravity;
 
@@ -94,39 +97,52 @@ public class ball : MonoBehaviour
     float vY;
     float vZ;
 
-    public TeamPlaing team;
+    public GameObject Bot;
 
     private void OnCollisionEnter(Collision collision)
     {
         //isKicked = false;
         if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
+            if(!Bot.GetComponent<BotBasicData>().isRaning)
+            {
+                xStart = transform.position.x;
+                zStart = transform.position.z;
+                xEnd = Random.Range(xMin, xMax);
+                zEnd = Random.Range(yMin, yMax);
 
-            xStart = transform.position.x;
-            zStart = transform.position.z;
-            xEnd = Random.Range(xMin, xMax);
-            zEnd = Random.Range(yMin, yMax);
+                flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
 
-            flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
+                vY = gravity * flyingTime / 2;
+                vX = (xEnd - xStart) / flyingTime;
+                vZ = (zEnd - zStart) / flyingTime;
 
-            vY = gravity * flyingTime / 2;
-            vX = (xEnd - xStart) / flyingTime;
-            vZ = (zEnd - zStart) / flyingTime;
+                rb.velocity = new Vector3(vX, vY, vZ);
 
-            rb.velocity = new Vector3(vX, vY, vZ);
+                onPlatform = true;
+                Invoke("NotOnPlatform", 0.1f);
+            }
+            else
+            {
+                PlayerPoints += 1;
+                PlayerScore.text = (PlayerPoints/2).ToString();
+                rb.velocity = new Vector3(0, 0, 0);
+                transform.position = new Vector3(21, 35, 0);
 
-            onPlatform = true;
-            Invoke("NotOnPlatform", 0.1f);
-            points += 1;
-            score.text = points.ToString();
+                Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
+                Bot.GetComponent<BotBasicData>().Teleport();
+            }
+           
         }
 
         if (collision.gameObject.CompareTag("field") && !onPlatform)
         {
-            points = 0;
-            score.text = points.ToString();
+            BotPoints += 1;
+            BotScore.text = (BotPoints/2).ToString();
             rb.velocity = new Vector3(0, 0, 0);
             transform.position = new Vector3(21, 35, 0);
+            Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
+            Bot.GetComponent<BotBasicData>().Teleport();
         }
     }
 
