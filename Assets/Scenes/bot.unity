@@ -6515,7 +6515,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002189492}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+<<<<<<< HEAD:Assets/Scenes/bot.unity
   m_LocalPosition: {x: 21, y: 25.29, z: 0}
+=======
+  m_LocalPosition: {x: 21, y: 22, z: 0}
+>>>>>>> d1edee2b4ad84f217401b8f2b38daf7d0f041100:Assets/Scenes/SampleScene - Copy.unity
   m_LocalScale: {x: 1.6015, y: 2.4476, z: 5.6191}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6601,7 +6605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 1826483155}
   transform: {fileID: 1002189493}
-  targetPosition: {x: 0, y: 24.7, z: 0}
+  targetPosition: {x: 21, y: 22, z: 0}
   isRaning: 0
   travelVelocity: 20
   timeOfReaction: 0.5

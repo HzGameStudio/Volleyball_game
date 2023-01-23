@@ -14,9 +14,9 @@ public class ball : MonoBehaviour
     public bool isKicked = false;
 
     public TextMeshProUGUI BotScore;
-    int BotPoints = 0;
+    float BotPoints = 0;
     public TextMeshProUGUI PlayerScore;
-    int PlayerPoints = 0;
+    float PlayerPoints = 0;
 
     public float Ballgravity;
 
@@ -138,12 +138,14 @@ public class ball : MonoBehaviour
             else
             {
                 PlayerPoints += 1;
-                PlayerScore.text = (PlayerPoints/2).ToString();
+                PlayerScore.text = (PlayerPoints/1).ToString();
                 rb.velocity = new Vector3(0, 0, 0);
                 transform.position = new Vector3(21, 35, 0);
 
                 Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
                 Bot.GetComponent<BotBasicData>().Teleport();
+                onPlatform = true;
+                Invoke("NotOnPlatform", 0.1f);
             }
            
         }
@@ -151,11 +153,13 @@ public class ball : MonoBehaviour
         if (collision.gameObject.CompareTag("field") && !onPlatform)
         {
             BotPoints += 1;
-            BotScore.text = (BotPoints/2).ToString();
+            BotScore.text = (BotPoints/1).ToString();
             rb.velocity = new Vector3(0, 0, 0);
             transform.position = new Vector3(21, 35, 0);
             Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
             Bot.GetComponent<BotBasicData>().Teleport();
+            onPlatform = true;
+            Invoke("NotOnPlatform", 0.1f);
         }
     }
 
