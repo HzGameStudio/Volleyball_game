@@ -54,10 +54,18 @@ public class ball : MonoBehaviour
 
                 //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
             }
-           
+
+            
+            //UnityChan.GetComponent<TriggerR>().TriggerRun();
+            //float dt = FallPointMovment.flyingTime/2 - 0.4f;
+            //Invoke("ChanWaiting", dt);
+            //UnityChan.GetComponent<TriggerR>().TriggerWait();
+
         }
         else if(collision.CompareTag("bottomHands"))
         {
+            UnityChan.GetComponent<TriggerR>().TriggerRun();
+
             kickForce = collision.gameObject.GetComponent<HandsManagerBottomPosition>().currentKickForce;
             if (kickForce > 0)
             {
@@ -87,6 +95,8 @@ public class ball : MonoBehaviour
     public float yMax = 20f;
     public float maxHeight = 50f;
 
+    public GameObject UnityChan;
+
     float gravity = 30f;
     float xStart;
     float zStart;
@@ -104,7 +114,9 @@ public class ball : MonoBehaviour
         //isKicked = false;
         if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
-            if(!Bot.GetComponent<BotBasicData>().isRaning)
+            
+
+            if (!Bot.GetComponent<BotBasicData>().isRaning)
             {
                 xStart = transform.position.x;
                 zStart = transform.position.z;
@@ -121,6 +133,7 @@ public class ball : MonoBehaviour
 
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
+                UnityChan.GetComponent<TriggerR>().TriggerAnimeKick();
             }
             else
             {
@@ -150,4 +163,9 @@ public class ball : MonoBehaviour
     {
         onPlatform = false;
     }
+
+    /*void ChanWaiting()
+    {
+        UnityChan.GetComponent<TriggerR>().TriggerWait();
+    }*/
 }    

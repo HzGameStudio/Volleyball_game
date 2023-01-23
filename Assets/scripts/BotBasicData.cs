@@ -22,6 +22,11 @@ public class BotBasicData : MonoBehaviour
     public bool isTimeofReactionRaning = false;
     public float currentTimeOfReaction = 0f;
 
+    public GameObject unityChan;
+    float waitingTime = 0f;
+    bool kickInvocked = false;
+    Vector3 fallPointTl;
+    public Transform Player;
 
     // Update is called once per frame
     void Update()
@@ -31,7 +36,44 @@ public class BotBasicData : MonoBehaviour
         SetTimerOfReaction();
 
         CalculateTimeOfRection();
+        
+        if (isRaning)
+        {
+            unityChan.GetComponent<TriggerR>().TriggerRun();
+            //transform.LookAt(fallPointTl);
+        }
+        else
+        {
+            unityChan.GetComponent<TriggerR>().TriggerWait();
+            //transform.LookAt(Vector3.zero);
+        }
 
+        /*if (waitingTime > 0 && !kickInvocked)
+        {
+            kickInvocked = true;
+            Invoke("resetKickInvocked", 0.5f);
+            waitingTime -= 0.8f;
+            Debug.Log(waitingTime);
+            if (waitingTime > 0)
+            {
+                Invoke("animationKick", waitingTime);
+            }
+            else
+            {
+                unityChan.GetComponent<TriggerR>().TriggerAnimeKick();
+            }
+            waitingTime = 0f;
+        }*/
+
+    }
+
+    void animationKick()
+    {
+        unityChan.GetComponent<TriggerR>().TriggerAnimeKick();
+    }
+    void resetKickInvocked()
+    {
+        kickInvocked = false;
     }
 
     public void Move()
@@ -62,9 +104,9 @@ public class BotBasicData : MonoBehaviour
         velocityY = rb.velocity.y;
         velocityZ = rb.velocity.z;
 
-        Debug.Log("bot velocyty " + rb.velocity.ToString());
-        Debug.Log("bot coors" + ball.position.ToString());
-        Debug.Log("Bot" + Time.timeSinceLevelLoad);
+        //Debug.Log("bot velocyty " + rb.velocity.ToString());
+        //Debug.Log("bot coors" + ball.position.ToString());
+        //Debug.Log("Bot" + Time.timeSinceLevelLoad);
 
         groundY = 24.7f + 1.5f;
 
@@ -144,9 +186,12 @@ public class BotBasicData : MonoBehaviour
 
         if (newFallPoint.x < 0)
         {
+            fallPointTl = fallPoint;
             return fallPoint;
         }
 
+        waitingTime = flyingTime;
+        fallPointTl = newFallPoint;
         return newFallPoint;
 
     }
@@ -163,7 +208,7 @@ public class BotBasicData : MonoBehaviour
                 currentTimeOfReaction = 0f;
                 //do something get target;
                 targetPosition = GetFallPointPosotion(ball.transform, ball.GetComponent<Rigidbody>(), handsHeidht, targetPosition);
-                Debug.Log("Change tranget");
+                //Debug.Log("Change tranget");
 
             }
         }

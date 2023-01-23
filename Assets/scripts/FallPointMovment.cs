@@ -10,6 +10,8 @@ public class FallPointMovment : MonoBehaviour
 
     private bool flag = true;
 
+    public static float flyingTime;
+
     void Update()
     {
         //if (gameObject.transform.position.x > 0 && flag)
@@ -52,7 +54,7 @@ public class FallPointMovment : MonoBehaviour
 
             if(discriminator >= 0)
             {
-                float flyingTime = 2 * velocityY / fallAcseleration + (-velocityY + Mathf.Sqrt(discriminator)) / fallAcseleration;
+                flyingTime = 2 * velocityY / fallAcseleration + (-velocityY + Mathf.Sqrt(discriminator)) / fallAcseleration;
 
                 newFallPoint.y = groundY;
                 newFallPoint.x = x + flyingTime * velocityX;
@@ -70,7 +72,7 @@ public class FallPointMovment : MonoBehaviour
 
             if(discriminator>=0)
             {
-                float flyingTime = (velocityY + Mathf.Sqrt(discriminator)) / fallAcseleration;
+                flyingTime = (velocityY + Mathf.Sqrt(discriminator)) / fallAcseleration;
 
                 newFallPoint.y = groundY;
                 newFallPoint.x = x + flyingTime * velocityX;
@@ -82,7 +84,6 @@ public class FallPointMovment : MonoBehaviour
             }
             
         }
-
 
 
         //Debug.Log(fallPoint);
