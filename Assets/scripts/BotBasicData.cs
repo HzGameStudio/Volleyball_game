@@ -31,6 +31,10 @@ public class BotBasicData : MonoBehaviour
 
     public GameObject unityChan;
 
+    float chanAngle;
+    bool rotaionNormalized = true;
+    bool rotated = true;
+
     // Update is called once per frame
     void Update()
     {
@@ -45,10 +49,21 @@ public class BotBasicData : MonoBehaviour
         if (isRaning)
         {
             unityChan.GetComponent<TriggerR>().TriggerRun();
+            if (!rotated)
+            {
+                unityChan.transform.Rotate(0f, chanAngle * Mathf.Rad2Deg, 0f);
+                rotated = true;
+                rotaionNormalized = false;
+            }
         }
         else
         {
             unityChan.GetComponent<TriggerR>().TriggerWait();
+            if (!rotaionNormalized)
+            {
+                unityChan.transform.Rotate(0f, -chanAngle * Mathf.Rad2Deg, 0f);
+                rotaionNormalized = true;
+            }
         }
     }
 
@@ -153,6 +168,9 @@ public class BotBasicData : MonoBehaviour
         {
             return fallPoint;
         }
+
+        chanAngle = Mathf.Atan((newFallPoint.x - unityChan.transform.position.x) / (newFallPoint.z - unityChan.transform.position.z));
+        rotated = false;
 
         return newFallPoint;
 

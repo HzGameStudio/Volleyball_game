@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.VFX;
-using UnityEditorInternal;
 using System.Runtime.CompilerServices;
 using UnityEngine.UIElements;
 
@@ -85,10 +84,10 @@ public class ball : MonoBehaviour
 
     bool onPlatform = false;
 
-    float xMin = -40f;
-    float xMax = -15f;
-    float zMin = -30f;
-    float zMax = 30f;
+    float xMin = -30f;
+    float xMax = -20f;
+    float zMin = -15f;
+    float zMax = 15f;
     float maxHeight = 40f;
 
     float gravity = 30f;
@@ -160,7 +159,7 @@ public class ball : MonoBehaviour
                 PlayerPoints += 1;
                 PlayerScore.text = (PlayerPoints/1).ToString(); 
                 rb.velocity = new Vector3(0, 0, 0);
-                transform.position = new Vector3(21, 35, 0);
+                transform.position = new Vector3(21, 40, 0);
 
                 Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
                 Bot.GetComponent<BotBasicData>().Teleport();
@@ -168,7 +167,7 @@ public class ball : MonoBehaviour
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
 
-                unityChan.GetComponent<TriggerR>().TriggerSpKick();
+                //unityChan.GetComponent<TriggerR>().TriggerSpKick();
             }
            
         }
@@ -178,14 +177,14 @@ public class ball : MonoBehaviour
             BotPoints += 1;
             BotScore.text = (BotPoints/1).ToString();
             rb.velocity = new Vector3(0, 0, 0);
-            transform.position = new Vector3(21, 35, 0);
+            transform.position = new Vector3(21, 40, 0);
             Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
             Bot.GetComponent<BotBasicData>().Teleport();
             Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
 
-            unityChan.GetComponent<TriggerR>().TriggerSpKick();
+            //unityChan.GetComponent<TriggerR>().TriggerSpKick();
         }
     }
 
