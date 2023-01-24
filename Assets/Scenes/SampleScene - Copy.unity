@@ -2353,7 +2353,7 @@ GameObject:
   - component: {fileID: 435820651}
   - component: {fileID: 435820655}
   m_Layer: 5
-  m_Name: Menu_Elements
+  m_Name: MenuElements
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2456,6 +2456,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3309bdb4c332614b9c163ff0ad00515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenuUI: {fileID: 930677895}
+  settingsMenuUI: {fileID: 443522803}
 --- !u!1 &441014624
 GameObject:
   m_ObjectHideFlags: 0
