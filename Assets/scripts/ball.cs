@@ -214,7 +214,7 @@ public class ball : MonoBehaviour
     private Vector3 GetFlySpeed(Vector2 startPoint, Vector2 finishPoint, float heigth)
     {
         Vector3 velocity;
-        Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), startPoint, finishPoint);
+        Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), new Vector2(startPoint.y, startPoint.x), new Vector2(finishPoint.y, finishPoint.x));
         float c = netPoint.x;
         netPoint.x = netPoint.y;
         netPoint.y = c; 
