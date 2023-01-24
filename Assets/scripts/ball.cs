@@ -147,14 +147,16 @@ public class ball : MonoBehaviour
                 Debug.Log(xEnd);
                 Debug.Log(zEnd);
 
-                flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
+                //flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
 
-                vY = gravity * flyingTime / 2;
-                vX = (xEnd - xStart) / flyingTime;
-                vZ = (zEnd - zStart) / flyingTime;
+                //vY = gravity * flyingTime / 2;
+                //vX = (xEnd - xStart) / flyingTime;
+                //vZ = (zEnd - zStart) / flyingTime;
 
-                rb.velocity = new Vector3(vX, vY, vZ);
+                //rb.velocity = new Vector3(vX, vY, vZ);
 
+                rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 10f);
+                //Debug.Log(findIntersetion(new Vector2(0, 0), new Vector2(1, 1), new Vector2(2, 2), new Vector2(-2, 2)));
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }
@@ -191,5 +193,45 @@ public class ball : MonoBehaviour
    void NotOnPlatform()
     {
         onPlatform = false;
+    }
+
+    private Vector2 findIntersetion(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+    {
+        float a1 = (p1.y - p2.y) / (p1.x - p2.x);
+        float b1 = p1.y - a1 * p1.x;
+        float a2 = (p3.y - p4.y) / (p3.x - p4.x);
+        float b2 = p3.y - a2 * p3.x;
+
+        Vector2 intrsPoint;
+        Debug.Log(a2);
+        Debug.Log(b2);
+
+
+        intrsPoint.x = (b1 - b2) / (a2 - a1);
+        intrsPoint.y = a1 * intrsPoint.x + b1;
+
+        return intrsPoint;
+    }
+
+    private Vector3 GetFlySpeed(Vector2 startPoint, Vector2 finishPoint, float heigth)
+    {
+        Vector3 velocity;
+        Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), startPoint, finishPoint);
+        float c = netPoint.x;
+        netPoint.x = netPoint.y;
+        netPoint.y = c;
+
+        float k1 = Mathf.Sqrt((netPoint.x - startPoint.x) * (netPoint.x - startPoint.x) + (netPoint.y - startPoint.y) * (netPoint.y - startPoint.y));
+        Debug.Log(netPoint);
+        float k2 = Mathf.Sqrt((finishPoint.x - startPoint.x) * (finishPoint.x - startPoint.x) + (finishPoint.y - startPoint.y) * (finishPoint.y - startPoint.y));
+
+        velocity.y = Mathf.Sqrt(heigth * gravity / (2 * (k2 - k1) * k1)) * k2;
+
+        float velocityK = Mathf.Sqrt(gravity * (k2 - k1) * k1 / (2 * heigth));
+
+        velocity.x = velocityK * (finishPoint.x - startPoint.x) / k2;
+        velocity.z = velocityK * (finishPoint.y - startPoint.y) / k2;
+
+        return velocity;
     }
 }    
