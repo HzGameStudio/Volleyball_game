@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.VFX;
+using UnityEditorInternal;
+using System.Runtime.CompilerServices;
 
 public class ball : MonoBehaviour
 {
@@ -81,11 +84,11 @@ public class ball : MonoBehaviour
 
     bool onPlatform = false;
 
-    public float xMin = -25f;
-    public float xMax = -15f;
-    public float yMin = -20f;
-    public float yMax = 20f;
-    public float maxHeight = 50f;
+    float xMin = -40f;
+    float xMax = -15f;
+    float zMin = -30f;
+    float zMax = 30f;
+    float maxHeight = 30f;
 
     float gravity = 30f;
     float xStart;
@@ -108,8 +111,41 @@ public class ball : MonoBehaviour
             {
                 xStart = transform.position.x;
                 zStart = transform.position.z;
-                xEnd = Random.Range(xMin, xMax);
-                zEnd = Random.Range(yMin, yMax);
+
+                Debug.Log(Bot.GetComponent<BotBasicData>().ReadyTime);
+                // if bot is ready too aim his shot
+                if (Bot.GetComponent<BotBasicData>().ReadyTime > 0)
+                {
+                    float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
+                    int furthest_corner = 0;
+                    for (int i = 1; i < 4; i++)
+                    {
+                        if (Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[i * 2], corners[i * 2 + 1])) > Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[furthest_corner * 2], corners[furthest_corner * 2 + 1])))
+                            furthest_corner = i;
+                    }
+                    float aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().AimTimeNeed;
+                    aim_percentage = Mathf.Min(aim_percentage, Bot.GetComponent<BotBasicData>().MaxAimAccuracy);
+                    Vector3 aim_center = bodyAngle.position + (new Vector3(corners[furthest_corner * 2], 0.0f, corners[furthest_corner * 2 + 1]) - bodyAngle.position) * aim_percentage;
+                    float aim_radius = Mathf.Min(Mathf.Abs(aim_center.x - xMin), Mathf.Abs(aim_center.x - xMax), Mathf.Abs(aim_center.z - zMin), Mathf.Abs(aim_center.z - zMax));
+
+                    float r = aim_radius * Mathf.Sqrt(Random.value);
+                    float theta = Random.value * 2 * Mathf.PI;
+                    xEnd = aim_center.x + r * Mathf.Cos(theta);
+                    zEnd = aim_center.z + r * Mathf.Sin(theta);
+                    Debug.Log("Bot Ready");
+                    Debug.Log(aim_percentage);
+                    Debug.Log(aim_center);
+                    Debug.Log(aim_radius);
+                }
+                else
+                {
+                    xEnd = Random.Range(xMin, xMax);
+                    zEnd = Random.Range(zMin, zMax);
+                    Debug.Log("Bot Not Ready");
+                }
+
+                Debug.Log(xEnd);
+                Debug.Log(zEnd);
 
                 flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
 
@@ -131,6 +167,7 @@ public class ball : MonoBehaviour
 
                 Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
                 Bot.GetComponent<BotBasicData>().Teleport();
+                Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }
@@ -145,6 +182,7 @@ public class ball : MonoBehaviour
             transform.position = new Vector3(21, 35, 0);
             Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
             Bot.GetComponent<BotBasicData>().Teleport();
+            Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
         }

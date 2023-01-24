@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -22,6 +23,12 @@ public class BotBasicData : MonoBehaviour
     public bool isTimeofReactionRaning = false;
     public float currentTimeOfReaction = 0f;
 
+    // if ReadyTime is negative, the bot is not ready to kick
+    public float ReadyTimeNeed;
+    public float AimTimeNeed;
+    public float MaxAimAccuracy;
+    public float ReadyTime = 0.0f;
+    
 
     // Update is called once per frame
     void Update()
@@ -32,6 +39,7 @@ public class BotBasicData : MonoBehaviour
 
         CalculateTimeOfRection();
 
+        CalculateReadyTime();
     }
 
     public void Move()
@@ -187,4 +195,12 @@ public class BotBasicData : MonoBehaviour
         isRaning = false;
     }
 
+    private void CalculateReadyTime()
+    {
+        if (transform.position == targetPosition)
+            ReadyTime += Time.deltaTime;
+        else
+            ReadyTime = -ReadyTimeNeed;
+        //Debug.Log(ReadyTime);
+    }
 }
