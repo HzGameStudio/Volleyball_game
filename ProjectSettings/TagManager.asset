@@ -8,6 +8,7 @@ TagManager:
   - topHands
   - bottomHands
   - field
+  - animtr
   layers:
   - Default
   - TransparentFX

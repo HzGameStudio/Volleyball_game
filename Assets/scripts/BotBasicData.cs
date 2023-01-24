@@ -28,7 +28,8 @@ public class BotBasicData : MonoBehaviour
     public float AimTimeNeed;
     public float MaxAimAccuracy;
     public float ReadyTime = 0.0f;
-    
+
+    public GameObject unityChan;
 
     // Update is called once per frame
     void Update()
@@ -40,6 +41,15 @@ public class BotBasicData : MonoBehaviour
         CalculateTimeOfRection();
 
         CalculateReadyTime();
+
+        if (isRaning)
+        {
+            unityChan.GetComponent<TriggerR>().TriggerRun();
+        }
+        else
+        {
+            unityChan.GetComponent<TriggerR>().TriggerWait();
+        }
     }
 
     public void Move()
@@ -160,7 +170,7 @@ public class BotBasicData : MonoBehaviour
                 currentTimeOfReaction = 0f;
                 //do something get target;
                 targetPosition = GetFallPointPosotion(ball.transform, ball.GetComponent<Rigidbody>(), handsHeidht, targetPosition);
-                Debug.Log("Change tranget");
+                //Debug.Log("Change tranget");
 
             }
         }

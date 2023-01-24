@@ -84,11 +84,11 @@ public class ball : MonoBehaviour
 
     bool onPlatform = false;
 
-    float xMin = -40f;
-    float xMax = -15f;
-    float zMin = -30f;
-    float zMax = 30f;
-    float maxHeight = 30f;
+    float xMin = -30f;
+    float xMax = -20f;
+    float zMin = -10f;
+    float zMax = 10f;
+    float maxHeight = 40f;
 
     float gravity = 30f;
     float xStart;
@@ -101,6 +101,8 @@ public class ball : MonoBehaviour
     float vZ;
 
     public GameObject Bot;
+
+    public GameObject unityChan;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -140,7 +142,7 @@ public class ball : MonoBehaviour
                     zEnd = Random.Range(zMin, zMax);
                 }
 
-                rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 5f);
+                rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 10f);
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }
@@ -156,6 +158,8 @@ public class ball : MonoBehaviour
                 Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
+
+                unityChan.GetComponent<TriggerR>().TriggerSpKick();
             }
            
         }
@@ -171,6 +175,8 @@ public class ball : MonoBehaviour
             Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
+
+            unityChan.GetComponent<TriggerR>().TriggerSpKick();
         }
     }
 
@@ -187,8 +193,8 @@ public class ball : MonoBehaviour
         float b2 = p3.y - a2 * p3.x;
 
         Vector2 intrsPoint;
-        Debug.Log(a2);
-        Debug.Log(b2);
+        //Debug.Log(a2);
+        //Debug.Log(b2);
 
 
         intrsPoint.x = (b1 - b2) / (a2 - a1);
@@ -206,7 +212,7 @@ public class ball : MonoBehaviour
         netPoint.y = c;
 
         float k1 = Mathf.Sqrt((netPoint.x - startPoint.x) * (netPoint.x - startPoint.x) + (netPoint.y - startPoint.y) * (netPoint.y - startPoint.y));
-        Debug.Log(netPoint);
+        //Debug.Log(netPoint);
         float k2 = Mathf.Sqrt((finishPoint.x - startPoint.x) * (finishPoint.x - startPoint.x) + (finishPoint.y - startPoint.y) * (finishPoint.y - startPoint.y));
 
         velocity.y = Mathf.Sqrt(heigth * gravity / (2 * (k2 - k1) * k1)) * k2;
@@ -217,5 +223,13 @@ public class ball : MonoBehaviour
         velocity.z = velocityK * (finishPoint.y - startPoint.y) / k2;
 
         return velocity;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("animtr"))
+        {
+            unityChan.GetComponent<TriggerR>().TriggerSpKick();
+        }
     }
 }    
