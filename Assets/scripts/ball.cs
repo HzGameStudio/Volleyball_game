@@ -112,10 +112,9 @@ public class ball : MonoBehaviour
                 xStart = transform.position.x;
                 zStart = transform.position.z;
 
-                Debug.Log(Bot.GetComponent<BotBasicData>().ReadyTime);
                 // if bot is ready too aim his shot
                 if (Bot.GetComponent<BotBasicData>().ReadyTime > 0)
-                {
+                { 
                     float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
                     int furthest_corner = 0;
                     for (int i = 1; i < 4; i++)
@@ -128,42 +127,27 @@ public class ball : MonoBehaviour
                     Vector3 aim_center = bodyAngle.position + (new Vector3(corners[furthest_corner * 2], 0.0f, corners[furthest_corner * 2 + 1]) - bodyAngle.position) * aim_percentage;
                     float aim_radius = Mathf.Min(Mathf.Abs(aim_center.x - xMin), Mathf.Abs(aim_center.x - xMax), Mathf.Abs(aim_center.z - zMin), Mathf.Abs(aim_center.z - zMax));
 
+                    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly/50746409#50746409
                     float r = aim_radius * Mathf.Sqrt(Random.value);
                     float theta = Random.value * 2 * Mathf.PI;
                     xEnd = aim_center.x + r * Mathf.Cos(theta);
                     zEnd = aim_center.z + r * Mathf.Sin(theta);
-                    Debug.Log("Bot Ready");
-                    Debug.Log(aim_percentage);
-                    Debug.Log(aim_center);
-                    Debug.Log(aim_radius);
                 }
+                // if bot is not ready to aim his shot
                 else
                 {
                     xEnd = Random.Range(xMin, xMax);
                     zEnd = Random.Range(zMin, zMax);
-                    Debug.Log("Bot Not Ready");
                 }
 
-                Debug.Log(xEnd);
-                Debug.Log(zEnd);
-
-                //flyingTime = Mathf.Sqrt(2 * maxHeight / gravity) * 2f;
-
-                //vY = gravity * flyingTime / 2;
-                //vX = (xEnd - xStart) / flyingTime;
-                //vZ = (zEnd - zStart) / flyingTime;
-
-                //rb.velocity = new Vector3(vX, vY, vZ);
-
-                rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 10f);
-                //Debug.Log(findIntersetion(new Vector2(0, 0), new Vector2(1, 1), new Vector2(2, 2), new Vector2(-2, 2)));
+                rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 5f);
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }
             else
             {
                 PlayerPoints += 1;
-                PlayerScore.text = (PlayerPoints/1).ToString();
+                PlayerScore.text = (PlayerPoints/1).ToString(); 
                 rb.velocity = new Vector3(0, 0, 0);
                 transform.position = new Vector3(21, 35, 0);
 

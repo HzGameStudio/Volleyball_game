@@ -70,9 +70,9 @@ public class BotBasicData : MonoBehaviour
         velocityY = rb.velocity.y;
         velocityZ = rb.velocity.z;
 
-        Debug.Log("bot velocyty " + rb.velocity.ToString());
-        Debug.Log("bot coors" + ball.position.ToString());
-        Debug.Log("Bot" + Time.timeSinceLevelLoad);
+        //Debug.Log("bot velocyty " + rb.velocity.ToString());
+        //Debug.Log("bot coors" + ball.position.ToString());
+        //Debug.Log("Bot" + Time.timeSinceLevelLoad);
 
         groundY = 24.7f + 1.5f;
 
@@ -83,14 +83,7 @@ public class BotBasicData : MonoBehaviour
 
         Vector3 newFallPoint;
         float flyingTime = 0f;
-        //if(y < 0)
-        //{
-        //    y = Mathf.Abs(y);
 
-        //    float discriminator = velocityY * velocityY - 2 * fallAcseleration * y;
-
-
-        //}
         if (velocityY > 0)
         {
             if(y>=0)
@@ -119,9 +112,7 @@ public class BotBasicData : MonoBehaviour
                     return fallPoint;
                 }
             }
-            
-            //float flyingTime = 2 * velocityY / fallAcseleration + (velocityY + Mathf.Sqrt(discriminator)) / fallAcseleration;
-
+           
             newFallPoint.y = groundY;
             newFallPoint.x = x + flyingTime * velocityX;
             newFallPoint.z = z + flyingTime * velocityZ;
@@ -147,8 +138,6 @@ public class BotBasicData : MonoBehaviour
         }
 
 
-
-        //Debug.Log(fallPoint);
 
         if (newFallPoint.x < 0)
         {
@@ -201,6 +190,5 @@ public class BotBasicData : MonoBehaviour
             ReadyTime += Time.deltaTime;
         else
             ReadyTime = -ReadyTimeNeed;
-        //Debug.Log(ReadyTime);
     }
 }
