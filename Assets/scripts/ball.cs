@@ -6,6 +6,7 @@ using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.VFX;
 using UnityEditorInternal;
 using System.Runtime.CompilerServices;
+using UnityEngine.UIElements;
 
 public class ball : MonoBehaviour
 {
@@ -84,10 +85,10 @@ public class ball : MonoBehaviour
 
     bool onPlatform = false;
 
-    float xMin = -30f;
-    float xMax = -20f;
-    float zMin = -10f;
-    float zMax = 10f;
+    float xMin = -40f;
+    float xMax = -15f;
+    float zMin = -30f;
+    float zMax = 30f;
     float maxHeight = 40f;
 
     float gravity = 30f;
@@ -115,7 +116,7 @@ public class ball : MonoBehaviour
                 zStart = transform.position.z;
 
                 // if bot is ready too aim his shot
-                if (Bot.GetComponent<BotBasicData>().ReadyTime > 0)
+                if (true)
                 { 
                     float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
                     int furthest_corner = 0;
@@ -134,6 +135,12 @@ public class ball : MonoBehaviour
                     float theta = Random.value * 2 * Mathf.PI;
                     xEnd = aim_center.x + r * Mathf.Cos(theta);
                     zEnd = aim_center.z + r * Mathf.Sin(theta);
+                    //Debug.Log("Bot Ready");
+                    //Debug.Log(aim_percentage);
+                    //Debug.Log(aim_center);
+                    //Debug.Log(aim_radius);
+                    //Debug.Log(xEnd);
+                    //Debug.Log(zEnd);
                 }
                 // if bot is not ready to aim his shot
                 else
@@ -143,6 +150,8 @@ public class ball : MonoBehaviour
                 }
 
                 rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 10f);
+                transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
+                //Debug.Log(transform.position);
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }
@@ -209,11 +218,14 @@ public class ball : MonoBehaviour
         Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), startPoint, finishPoint);
         float c = netPoint.x;
         netPoint.x = netPoint.y;
-        netPoint.y = c;
+        netPoint.y = c; 
 
         float k1 = Mathf.Sqrt((netPoint.x - startPoint.x) * (netPoint.x - startPoint.x) + (netPoint.y - startPoint.y) * (netPoint.y - startPoint.y));
         //Debug.Log(netPoint);
         float k2 = Mathf.Sqrt((finishPoint.x - startPoint.x) * (finishPoint.x - startPoint.x) + (finishPoint.y - startPoint.y) * (finishPoint.y - startPoint.y));
+
+        //Debug.Log("k1 " + k1);
+        //Debug.Log("k2 " + k2);
 
         velocity.y = Mathf.Sqrt(heigth * gravity / (2 * (k2 - k1) * k1)) * k2;
 
