@@ -26,6 +26,7 @@ public class BotBasicData : MonoBehaviour
     // if ReadyTime is negative, the bot is not ready to kick
     public float ReadyTimeNeed;
     public float AimTimeNeed;
+    public float SuperAimTimeNeed;
     public float MaxAimAccuracy;
     public float ReadyTime = 0.0f;
 
@@ -217,6 +218,6 @@ public class BotBasicData : MonoBehaviour
         if (transform.position == targetPosition)
             ReadyTime += Time.deltaTime;
         else
-            ReadyTime = -ReadyTimeNeed;
+            ReadyTime = 0.0f;
     }
 }

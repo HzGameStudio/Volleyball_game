@@ -84,21 +84,20 @@ public class ball : MonoBehaviour
 
     bool onPlatform = false;
 
-    float xMin = -30f;
-    float xMax = -20f;
-    float zMin = -15f;
-    float zMax = 15f;
-    float maxHeight = 40f;
+    float xMin = -40f;
+    float xMax = -15f;
+    float zMin = -30f;
+    float zMax = 30f;
+    float minHeightWithMiss = 0f;
+    float minHeightNetTouch = 5.65f;
+    float minHeight = 6f;
+    float maxHeight = 30f;
 
     float gravity = 30f;
     float xStart;
     float zStart;
     float xEnd;
     float zEnd;
-    float flyingTime;
-    float vX;
-    float vY;
-    float vZ;
 
     public GameObject Bot;
 
@@ -115,8 +114,9 @@ public class ball : MonoBehaviour
                 zStart = transform.position.z;
 
                 // if bot is ready too aim his shot
-                if (true)
+                if (Bot.GetComponent<BotBasicData>().ReadyTime > Bot.GetComponent<BotBasicData>().ReadyTimeNeed)
                 { 
+                    // find the furthest corner from player
                     float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
                     int furthest_corner = 0;
                     for (int i = 1; i < 4; i++)
@@ -124,33 +124,52 @@ public class ball : MonoBehaviour
                         if (Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[i * 2], corners[i * 2 + 1])) > Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[furthest_corner * 2], corners[furthest_corner * 2 + 1])))
                             furthest_corner = i;
                     }
+
+                    // find aim_percentage and limit to MaxAimAccuracy
                     float aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().AimTimeNeed;
                     aim_percentage = Mathf.Min(aim_percentage, Bot.GetComponent<BotBasicData>().MaxAimAccuracy);
+
+                    // find aim_center:
+                    // add vector going from player to corner multiplied by aim_percentage to player position
                     Vector3 aim_center = bodyAngle.position + (new Vector3(corners[furthest_corner * 2], 0.0f, corners[furthest_corner * 2 + 1]) - bodyAngle.position) * aim_percentage;
+
+                    // find aim_radius
                     float aim_radius = Mathf.Min(Mathf.Abs(aim_center.x - xMin), Mathf.Abs(aim_center.x - xMax), Mathf.Abs(aim_center.z - zMin), Mathf.Abs(aim_center.z - zMax));
 
-                    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly/50746409#50746409
+                    // random point in circle: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly/50746409#50746409
                     float r = aim_radius * Mathf.Sqrt(Random.value);
                     float theta = Random.value * 2 * Mathf.PI;
                     xEnd = aim_center.x + r * Mathf.Cos(theta);
                     zEnd = aim_center.z + r * Mathf.Sin(theta);
-                    //Debug.Log("Bot Ready");
-                    //Debug.Log(aim_percentage);
-                    //Debug.Log(aim_center);
-                    //Debug.Log(aim_radius);
-                    //Debug.Log(xEnd);
-                    //Debug.Log(zEnd);
+
+                    // find super_aim_percentage
+                    float super_aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().SuperAimTimeNeed;
+
+                    // if not in SuperAim mode, the bot cannot hit the net
+                    float shot_height;
+                    if (Bot.GetComponent<BotBasicData>().ReadyTime < Bot.GetComponent<BotBasicData>().SuperAimTimeNeed)
+                        shot_height = Random.Range(minHeight, Mathf.Max(maxHeight * (1 - aim_percentage), minHeight));
+                    else
+                        shot_height = Random.Range(minHeightNetTouch, Mathf.Max(minHeight * (1 - super_aim_percentage), minHeightNetTouch));
+
+                    // determine needed velocity
+                    rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), shot_height);
+                    Debug.Log(shot_height);
+                    Debug.Log(Bot.GetComponent<BotBasicData>().ReadyTime);
                 }
-                // if bot is not ready to aim his shot
                 else
                 {
+                    // random point on field
                     xEnd = Random.Range(xMin, xMax);
                     zEnd = Random.Range(zMin, zMax);
+
+                    // random height, ball can hit the net and miss
+                    float shot_height = Random.Range(minHeightWithMiss, maxHeight);
+                    rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), shot_height);
+                    Debug.Log("Not Ready");
                 }
 
-                rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), 10f);
                 transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
-                //Debug.Log(transform.position);
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }

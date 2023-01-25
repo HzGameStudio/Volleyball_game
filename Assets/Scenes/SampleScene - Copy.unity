@@ -4263,7 +4263,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659485758}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40.63, y: 20, z: -29.9}
+  m_LocalPosition: {x: -40.59, y: 20, z: -29.9}
   m_LocalScale: {x: 2.0345, y: 0.46834248, z: 2.5137153}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6655,8 +6655,9 @@ MonoBehaviour:
   handsHeidht: 26.2
   isTimeofReactionRaning: 0
   currentTimeOfReaction: 0
-  ReadyTimeNeed: 0.5
-  AimTimeNeed: 1
+  ReadyTimeNeed: 0.3
+  AimTimeNeed: 1.1
+  SuperAimTimeNeed: 1.3
   MaxAimAccuracy: 0.9
   ReadyTime: 0
   unityChan: {fileID: 1882308894}
