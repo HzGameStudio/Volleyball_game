@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterController controller;
 
-    public float speed = 12f;
+    public float normalSpeed = 12f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
 
@@ -17,9 +17,24 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
+    public float sprintTime;
+    public float sprintSpeed;
+
+    private float speed;
+
+    public float currentSprintTime = 0f;
+
+    private bool isSprintRefilling = false;
+
     Vector3 velocity;
     bool isGrounded;
 
+
+    private void Awake()
+    {
+        float speed = normalSpeed;
+        currentSprintTime = sprintTime;
+    }
     void Update()
     {
 
@@ -28,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+            
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -45,6 +61,38 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+
+
+
+        if (Input.GetKey(KeyCode.LeftShift) && currentSprintTime > 0 && !isSprintRefilling)
+        {
+            if(currentSprintTime >0f)
+            {
+                speed = sprintSpeed;
+                currentSprintTime -= Time.deltaTime;
+                if(currentSprintTime< 0f)
+                {
+                    currentSprintTime = 0f;
+                    isSprintRefilling = true;
+                }
+            }
+            
+
+        }
+        else
+        {
+            speed = normalSpeed;
+            currentSprintTime += Time.deltaTime / 2f;
+            if (currentSprintTime > sprintTime)
+            {
+                currentSprintTime = sprintTime;
+            }
+
+            if(currentSprintTime > sprintTime * 0.2f)
+            {
+                isSprintRefilling = false;
+            }
+        }
     }
 
     
