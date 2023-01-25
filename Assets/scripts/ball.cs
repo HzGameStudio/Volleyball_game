@@ -102,6 +102,8 @@ public class ball : MonoBehaviour
 
     public GameObject Bot;
 
+    //public Transform test;
+
     public GameObject unityChan;
 
     private void OnCollisionEnter(Collision collision)
@@ -154,7 +156,7 @@ public class ball : MonoBehaviour
                         shot_height = Random.Range(minHeightNetTouch, Mathf.Max(minHeight * (1 - super_aim_percentage), minHeightNetTouch));
 
                     // determine needed velocity
-                    rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), shot_height);
+                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f) ;
                     Debug.Log(shot_height);
                     Debug.Log(Bot.GetComponent<BotBasicData>().ReadyTime);
                 }
@@ -166,11 +168,11 @@ public class ball : MonoBehaviour
 
                     // random height, ball can hit the net and miss
                     float shot_height = Random.Range(minHeightWithMiss, maxHeight);
-                    rb.velocity = GetFlySpeed(new Vector2(xStart, zStart), new Vector2(xEnd, zEnd), shot_height);
+                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f) ;
                     Debug.Log("Not Ready");
                 }
 
-                transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
+                //transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
             }
@@ -231,27 +233,34 @@ public class ball : MonoBehaviour
         return intrsPoint;
     }
 
-    private Vector3 GetFlySpeed(Vector2 startPoint, Vector2 finishPoint, float heigth)
+    private Vector3 GetFlySpeed(Vector3 startPoint, Vector3 finishPoint, float heigthIsWorldSpace)
     {
         Vector3 velocity;
-        Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), new Vector2(startPoint.y, startPoint.x), new Vector2(finishPoint.y, finishPoint.x));
+        Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), new Vector2(startPoint.z, startPoint.x), new Vector2(finishPoint.z, finishPoint.x));
         float c = netPoint.x;
         netPoint.x = netPoint.y;
         netPoint.y = c; 
 
-        float k1 = Mathf.Sqrt((netPoint.x - startPoint.x) * (netPoint.x - startPoint.x) + (netPoint.y - startPoint.y) * (netPoint.y - startPoint.y));
+        float k1 = Mathf.Sqrt((netPoint.x - startPoint.x) * (netPoint.x - startPoint.x) + (netPoint.y - startPoint.z) * (netPoint.y - startPoint.z));
         //Debug.Log(netPoint);
-        float k2 = Mathf.Sqrt((finishPoint.x - startPoint.x) * (finishPoint.x - startPoint.x) + (finishPoint.y - startPoint.y) * (finishPoint.y - startPoint.y));
+        float k2 = Mathf.Sqrt((finishPoint.x - startPoint.x) * (finishPoint.x - startPoint.x) + (finishPoint.z - startPoint.z) * (finishPoint.z - startPoint.z));
 
         //Debug.Log("k1 " + k1);
         //Debug.Log("k2 " + k2);
+        float groundLevel = 20f;
+        //float ballLevel = 26.2f;
 
-        velocity.y = Mathf.Sqrt(heigth * gravity / (2 * (k2 - k1) * k1)) * k2;
+        float a = (heigthIsWorldSpace - groundLevel) / ((k1 - k2) * k1);
+        float b = -(startPoint.y - groundLevel) / k2 - a * k2;
 
-        float velocityK = Mathf.Sqrt(gravity * (k2 - k1) * k1 / (2 * heigth));
+        float velocityK = Mathf.Sqrt(-gravity/(2*a));
+        velocity.y = velocityK * b;
+        ////velocity.y = Mathf.Sqrt(heigth * gravity / (2 * (k2 - k1) * k1)) * k2;
+
+        ////float velocityK = Mathf.Sqrt(gravity * (k2 - k1) * k1 / (2 * heigth));
 
         velocity.x = velocityK * (finishPoint.x - startPoint.x) / k2;
-        velocity.z = velocityK * (finishPoint.y - startPoint.y) / k2;
+        velocity.z = velocityK * (finishPoint.z - startPoint.z) / k2;
 
         return velocity;
     }
