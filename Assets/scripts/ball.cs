@@ -90,14 +90,15 @@ public class ball : MonoBehaviour
     float zMax = 30f;
     float minHeightWithMiss = 0f;
     float minHeightNetTouch = 5.65f;
-    float minHeight = 6f;
-    float maxHeight = 30f;
+    public float minHeight = 6f;
+    public float maxHeight = 30f;
 
     float gravity = 30f;
     float xStart;
     float zStart;
     float xEnd;
     float zEnd;
+    public float botNerf = 5f;
 
     public GameObject Bot;
 
@@ -178,9 +179,9 @@ public class ball : MonoBehaviour
                 PlayerPoints += 1;
                 PlayerScore.text = (PlayerPoints/1).ToString(); 
                 rb.velocity = new Vector3(0, 0, 0);
-                transform.position = new Vector3(21, 40, 0);
+                transform.position = new Vector3(44f, 32f, -29f);
 
-                Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
+                Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(44f, 26.2f, -29f);
                 Bot.GetComponent<BotBasicData>().Teleport();
                 Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
                 onPlatform = true;
@@ -196,8 +197,8 @@ public class ball : MonoBehaviour
             BotPoints += 1;
             BotScore.text = (BotPoints/1).ToString();
             rb.velocity = new Vector3(0, 0, 0);
-            transform.position = new Vector3(21, 40, 0);
-            Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(21, 26.2f, 0);
+            transform.position = new Vector3(44f, 32f, -29f);
+            Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(44f, 26.2f, -29f);
             Bot.GetComponent<BotBasicData>().Teleport();
             Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
             onPlatform = true;
