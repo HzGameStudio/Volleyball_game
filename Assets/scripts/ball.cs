@@ -23,11 +23,16 @@ public class ball : MonoBehaviour
 
     public float Ballgravity;
 
+    Vector3 starting_position;
 
     //public FallPointMovment fallPointMovmentScript;
 
     Vector3 appliedForce;
 
+    private void Start()
+    {
+        starting_position = transform.position;
+    }
 
     //private void Update()
     //{
@@ -88,14 +93,13 @@ public class ball : MonoBehaviour
     float xMax = -15f;
     float zMin = -30f;
     float zMax = 30f;
-    float minHeightWithMiss = 0f;
-    float minHeightNetTouch = 5.65f;
-    public float minHeight = 6f;
-    public float maxHeight = 30f;
+    float minHeightWithMiss = 1f;
+    float minHeightNetTouch = 5f;
+    float minHeight = 5f;
+    float maxHeight = 40f;
+    float heightWindow = 10f;
 
     float gravity = 30f;
-    float xStart;
-    float zStart;
     float xEnd;
     float zEnd;
     public float botNerf = 5f;
@@ -113,9 +117,6 @@ public class ball : MonoBehaviour
         {
             if(!Bot.GetComponent<BotBasicData>().isRaning)
             {
-                xStart = transform.position.x;
-                zStart = transform.position.z;
-
                 // if bot is ready too aim his shot
                 if (Bot.GetComponent<BotBasicData>().ReadyTime > Bot.GetComponent<BotBasicData>().ReadyTimeNeed)
                 { 
@@ -148,17 +149,24 @@ public class ball : MonoBehaviour
                     // find super_aim_percentage
                     float super_aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().SuperAimTimeNeed;
 
-                    // if not in SuperAim mode, the bot cannot hit the net
+                    /*
                     float shot_height;
-                    if (Bot.GetComponent<BotBasicData>().ReadyTime < Bot.GetComponent<BotBasicData>().SuperAimTimeNeed)
+                    if (Bot.GetComponent<BotBasicData>().ReadyTime < Bot.GetComponent<BotBasicData>().AimTimeNeed)
                         shot_height = Random.Range(minHeight, Mathf.Max(maxHeight * (1 - aim_percentage), minHeight));
                     else
                         shot_height = Random.Range(minHeightNetTouch, Mathf.Max(minHeight * (1 - super_aim_percentage), minHeightNetTouch));
+                    */
+                    // if not in SuperAim mode, the bot cannot hit the net
+                    float shot_height;
+                    //if (Bot.GetComponent<BotBasicData>().ReadyTime < Bot.GetComponent<BotBasicData>().AimTimeNeed)
+                        shot_height = Random.Range(Mathf.Max(maxHeight * (1 - aim_percentage), minHeight), Mathf.Max(maxHeight * (1 - aim_percentage) - heightWindow, minHeight));
+                    //else
+                        //shot_height = Random.Range(Mathf.Max(maxHeight * (1 - super_aim_percentage), minHeightNetTouch), Mathf.Max(maxHeight * (1 - super_aim_percentage) - heightWindow, minHeightNetTouch));
 
                     // determine needed velocity
-                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f) ;
-                    Debug.Log(shot_height);
-                    Debug.Log(Bot.GetComponent<BotBasicData>().ReadyTime);
+                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
+                    Debug.Log("shot_height: " + shot_height);
+                    Debug.Log("Ready Time: " + Bot.GetComponent<BotBasicData>().ReadyTime);
                 }
                 else
                 {
@@ -181,9 +189,9 @@ public class ball : MonoBehaviour
                 PlayerPoints += 1;
                 PlayerScore.text = (PlayerPoints/1).ToString(); 
                 rb.velocity = new Vector3(0, 0, 0);
-                transform.position = new Vector3(44f, 32f, -29f);
+                transform.position = starting_position;
 
-                Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(44f, 26.2f, -29f);
+                Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
                 Bot.GetComponent<BotBasicData>().Teleport();
                 Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
                 onPlatform = true;
@@ -199,8 +207,9 @@ public class ball : MonoBehaviour
             BotPoints += 1;
             BotScore.text = (BotPoints/1).ToString();
             rb.velocity = new Vector3(0, 0, 0);
-            transform.position = new Vector3(44f, 32f, -29f);
-            Bot.GetComponent<BotBasicData>().targetPosition = new Vector3(44f, 26.2f, -29f);
+            transform.position = starting_position;
+
+            Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
             Bot.GetComponent<BotBasicData>().Teleport();
             Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
             onPlatform = true;

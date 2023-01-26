@@ -36,6 +36,14 @@ public class BotBasicData : MonoBehaviour
     bool rotaionNormalized = true;
     bool rotated = true;
 
+    public Vector3 starting_position;
+
+    private void Start()
+    {
+        targetPosition = transform.position;
+        starting_position = transform.position;
+    }
+
     // Update is called once per frame
     void Update()
     {
