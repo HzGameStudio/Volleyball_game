@@ -55,22 +55,38 @@ public class BotBasicData : MonoBehaviour
 
         CalculateReadyTime();
 
+        //rotates unity chan so she faces fall point (get rotated, unity chan! UwU)
         if (isRaning)
         {
             unityChan.GetComponent<TriggerR>().TriggerRun();
             if (!rotated)
             {
-                unityChan.transform.Rotate(0f, chanAngle * Mathf.Rad2Deg, 0f);
+                //unity rotation system is weird so I fix it here
+                if (Mathf.Abs(chanAngle * Mathf.Rad2Deg - 180f) > 180)
+                {
+                    unityChan.transform.Rotate(0f, 90 - chanAngle * Mathf.Rad2Deg, 0f);
+                }
+                else
+                {
+                    unityChan.transform.Rotate(0f, chanAngle * Mathf.Rad2Deg - 90f, 0f);
+                }
                 rotated = true;
                 rotaionNormalized = false;
             }
         }
         else
-        {
+        {   //normalizes rotarion of inty chan so she faces opposite side of the field
             unityChan.GetComponent<TriggerR>().TriggerWait();
             if (!rotaionNormalized)
             {
-                unityChan.transform.Rotate(0f, -chanAngle * Mathf.Rad2Deg, 0f);
+                if (Mathf.Abs(chanAngle * Mathf.Rad2Deg - 180f) > 180)
+                {
+                    unityChan.transform.Rotate(0f, -90 + chanAngle * Mathf.Rad2Deg, 0f);
+                }
+                else
+                {
+                    unityChan.transform.Rotate(0f, -chanAngle * Mathf.Rad2Deg + 90f, 0f);
+                }
                 rotaionNormalized = true;
             }
         }
