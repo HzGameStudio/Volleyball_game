@@ -29,6 +29,7 @@ public class BotBasicData : MonoBehaviour
     public float ReadyTime = 0.0f;
 
     public GameObject unityChan;
+    Vector2 catheuses;
 
     public GameObject player;
 
@@ -64,14 +65,19 @@ public class BotBasicData : MonoBehaviour
             if (!rotated)
             {
                 //unity rotation system is weird so I fix it here
-                if (Mathf.Abs(chanAngle * Mathf.Rad2Deg - 180f) > 180)
+                if (catheuses.y < 0)
                 {
-                    unityChan.transform.Rotate(0f, 90 - chanAngle * Mathf.Rad2Deg, 0f);
+                    catheuses.y = Mathf.Abs(catheuses.y);
+                    chanAngle = Mathf.Atan(catheuses.x / catheuses.y) * Mathf.Rad2Deg;
+                    catheuses.y = -catheuses.y;
                 }
                 else
                 {
-                    unityChan.transform.Rotate(0f, chanAngle * Mathf.Rad2Deg - 90f, 0f);
+                    chanAngle = 180 - Mathf.Atan(catheuses.x / catheuses.y) * Mathf.Rad2Deg;
                 }
+                chanAngle = chanAngle - 90f;
+
+                unityChan.transform.Rotate(0f, chanAngle, 0f);
                 rotated = true;
                 rotaionNormalized = false;
             }
@@ -81,14 +87,7 @@ public class BotBasicData : MonoBehaviour
             unityChan.GetComponent<TriggerR>().TriggerWait();
             if (!rotaionNormalized)
             {
-                if (Mathf.Abs(chanAngle * Mathf.Rad2Deg - 180f) > 180)
-                {
-                    unityChan.transform.Rotate(0f, -90 + chanAngle * Mathf.Rad2Deg, 0f);
-                }
-                else
-                {
-                    unityChan.transform.Rotate(0f, -chanAngle * Mathf.Rad2Deg + 90f, 0f);
-                }
+                unityChan.transform.Rotate(0f, -chanAngle, 0f);
                 rotaionNormalized = true;
             }
         }
@@ -113,6 +112,8 @@ public class BotBasicData : MonoBehaviour
             }
         }
     }
+
+    public GameObject deleteLater;
 
     public Vector3 GetFallPointPosotion(Transform ball, Rigidbody rb, float groundY, Vector3 fallPoint)
     {
@@ -196,7 +197,8 @@ public class BotBasicData : MonoBehaviour
             return fallPoint;
         }
 
-        chanAngle = Mathf.Atan((newFallPoint.x - unityChan.transform.position.x) / (newFallPoint.z - unityChan.transform.position.z));
+        catheuses = new Vector2 ((-newFallPoint.x + unityChan.transform.position.x), (newFallPoint.z - unityChan.transform.position.z));
+        deleteLater.transform.position = newFallPoint;
         rotated = false;
 
         return newFallPoint;
