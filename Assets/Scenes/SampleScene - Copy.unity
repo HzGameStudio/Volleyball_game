@@ -5123,7 +5123,7 @@ MonoBehaviour:
   idealKickPoint: {fileID: 724593517}
   ball: {fileID: 1826483162}
   currentTime: 0
-  maxKickForce: 1300
+  maxKickForce: 3000
   currentKickForce: 0
   LeftArm: {fileID: 78572473085461560}
   RightArm: {fileID: 78572473085461562}

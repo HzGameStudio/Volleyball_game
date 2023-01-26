@@ -21,8 +21,6 @@ public class ball : MonoBehaviour
     public TextMeshProUGUI PlayerScore;
     float PlayerPoints = 0;
 
-    public float Ballgravity;
-
     Vector3 starting_position;
 
     //public FallPointMovment fallPointMovmentScript;
@@ -34,13 +32,6 @@ public class ball : MonoBehaviour
         starting_position = transform.position;
     }
 
-    //private void Update()
-    //{
-    //    Vector3 speed = rb.velocity;
-    //    speed.y += Ballgravity * Time.deltaTime;
-
-    //    rb.velocity = speed;
-    //}
     void OnTriggerStay(Collider collision)
     {
         if (collision.CompareTag("topHands"))
@@ -51,34 +42,30 @@ public class ball : MonoBehaviour
                 if (kickForce > 0)
                 {
                     rb.velocity = new Vector3(0, 0, 0);
-                }
-                appliedForce = collision.gameObject.transform.up * kickForce;
-                rb.AddForce(appliedForce);
-                //Debug.Log(appliedForce);
-                if (appliedForce.magnitude != 0)
-                {
+                    appliedForce = collision.gameObject.transform.up * kickForce;
+                    rb.AddForce(appliedForce);
                     isKicked = true;
                 }
-
+                //Debug.Log(appliedForce);
                 //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
             }
            
         }
         else if(collision.CompareTag("bottomHands"))
         {
-            kickForce = collision.gameObject.GetComponent<HandsManagerBottomPosition>().currentKickForce;
-            if (kickForce > 0)
+            if (!isKicked)
             {
-                rb.velocity = new Vector3(0, 0, 0);
+                kickForce = collision.gameObject.GetComponent<HandsManagerBottomPosition>().currentKickForce;
+                if (kickForce > 0)
+                {
+                    rb.velocity = new Vector3(0, 0, 0);
+                    appliedForce = collision.gameObject.transform.up * kickForce;
+                    rb.AddForce(appliedForce);
+                    isKicked = true;
+                }
+                //Debug.Log(appliedForce);  
+                //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
             }
-            appliedForce = collision.gameObject.transform.up * kickForce;
-            rb.AddForce(appliedForce);
-            //Debug.Log(appliedForce);
-            if (appliedForce.magnitude != 0)
-            {
-                isKicked = true;
-            }
-            //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
         }
     }
 
@@ -112,7 +99,6 @@ public class ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //isKicked = false;
         if (collision.gameObject.CompareTag("Wall") && !onPlatform)
         {
             if(!Bot.GetComponent<BotBasicData>().isRaning)
@@ -146,22 +132,8 @@ public class ball : MonoBehaviour
                     xEnd = aim_center.x + r * Mathf.Cos(theta);
                     zEnd = aim_center.z + r * Mathf.Sin(theta);
 
-                    // find super_aim_percentage
-                    float super_aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().SuperAimTimeNeed;
-
-                    /*
                     float shot_height;
-                    if (Bot.GetComponent<BotBasicData>().ReadyTime < Bot.GetComponent<BotBasicData>().AimTimeNeed)
-                        shot_height = Random.Range(minHeight, Mathf.Max(maxHeight * (1 - aim_percentage), minHeight));
-                    else
-                        shot_height = Random.Range(minHeightNetTouch, Mathf.Max(minHeight * (1 - super_aim_percentage), minHeightNetTouch));
-                    */
-                    // if not in SuperAim mode, the bot cannot hit the net
-                    float shot_height;
-                    //if (Bot.GetComponent<BotBasicData>().ReadyTime < Bot.GetComponent<BotBasicData>().AimTimeNeed)
-                        shot_height = Random.Range(Mathf.Max(maxHeight * (1 - aim_percentage), minHeight), Mathf.Max(maxHeight * (1 - aim_percentage) - heightWindow, minHeight));
-                    //else
-                        //shot_height = Random.Range(Mathf.Max(maxHeight * (1 - super_aim_percentage), minHeightNetTouch), Mathf.Max(maxHeight * (1 - super_aim_percentage) - heightWindow, minHeightNetTouch));
+                    shot_height = Random.Range(Mathf.Max(maxHeight * (1 - aim_percentage), minHeight), Mathf.Max(maxHeight * (1 - aim_percentage) - heightWindow, minHeight));
 
                     // determine needed velocity
                     rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
@@ -187,7 +159,7 @@ public class ball : MonoBehaviour
             else
             {
                 PlayerPoints += 1;
-                PlayerScore.text = (PlayerPoints/1).ToString(); 
+                PlayerScore.text = PlayerPoints.ToString(); 
                 rb.velocity = new Vector3(0, 0, 0);
                 transform.position = starting_position;
 
@@ -205,7 +177,7 @@ public class ball : MonoBehaviour
         if (collision.gameObject.CompareTag("field") && !onPlatform)
         {
             BotPoints += 1;
-            BotScore.text = (BotPoints/1).ToString();
+            BotScore.text = BotPoints.ToString();
             rb.velocity = new Vector3(0, 0, 0);
             transform.position = starting_position;
 
@@ -242,7 +214,7 @@ public class ball : MonoBehaviour
         return intrsPoint;
     }
 
-    private Vector3 GetFlySpeed(Vector3 startPoint, Vector3 finishPoint, float heigthIsWorldSpace)
+    private Vector3 GetFlySpeed(Vector3 startPoint, Vector3 finishPoint, float heigthInWorldSpace)
     {
         Vector3 velocity;
         Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), new Vector2(startPoint.z, startPoint.x), new Vector2(finishPoint.z, finishPoint.x));
@@ -256,11 +228,10 @@ public class ball : MonoBehaviour
 
         //Debug.Log("k1 " + k1);
         //Debug.Log("k2 " + k2);
-        float groundLevel = 20f;
         //float ballLevel = 26.2f;
 
-        float a = (heigthIsWorldSpace - groundLevel) / ((k1 - k2) * k1);
-        float b = -(startPoint.y - groundLevel) / k2 - a * k2;
+        float a = (heigthInWorldSpace - finishPoint.y) / ((k1 - k2) * k1);
+        float b = -(startPoint.y - finishPoint.y) / k2 - a * k2;
 
         float velocityK = Mathf.Sqrt(-gravity/(2*a));
         velocity.y = velocityK * b;
