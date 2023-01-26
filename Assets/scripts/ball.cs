@@ -81,7 +81,6 @@ public class ball : MonoBehaviour
     float zMin = -30f;
     float zMax = 30f;
     float minHeightWithMiss = 1f;
-    float minHeightNetTouch = 5f;
     float minHeight = 5f;
     float maxHeight = 40f;
     float heightWindow = 10f;
@@ -103,9 +102,16 @@ public class ball : MonoBehaviour
         {
             if(!Bot.GetComponent<BotBasicData>().isRaning)
             {
+                if (Bot.GetComponent<BotBasicData>().IsTestMode)
+                {
+                    // throw ball to player
+                    rb.velocity = GetFlySpeed(transform.position, new Vector3(bodyAngle.transform.position.x, 20f, bodyAngle.transform.position.z), 20f + 26.2f);
+                    Debug.Log("Test Mode");
+                }
+
                 // if bot is ready too aim his shot
-                if (Bot.GetComponent<BotBasicData>().ReadyTime > Bot.GetComponent<BotBasicData>().ReadyTimeNeed)
-                { 
+                else if (Bot.GetComponent<BotBasicData>().ReadyTime > Bot.GetComponent<BotBasicData>().ReadyTimeNeed)
+                {
                     // find the furthest corner from player
                     float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
                     int furthest_corner = 0;

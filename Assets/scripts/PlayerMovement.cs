@@ -5,11 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
-
-
     public CharacterController controller;
 
-    public float normalSpeed = 12f;
+    public float normalSpeed = 15f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
 

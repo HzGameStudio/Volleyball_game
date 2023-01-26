@@ -9,14 +9,13 @@ public class BotBasicData : MonoBehaviour
     public GameObject ball;
 
 
-    public Transform transform;
+    public Transform BotTransform;
     public Vector3 targetPosition;
 
     public bool isRaning = false;
 
     public float travelVelocity;
     public float timeOfReaction;
-
 
     public float handsHeidht;
 
@@ -26,11 +25,12 @@ public class BotBasicData : MonoBehaviour
     // if ReadyTime is negative, the bot is not ready to kick
     public float ReadyTimeNeed;
     public float AimTimeNeed;
-    public float SuperAimTimeNeed;
     public float MaxAimAccuracy;
     public float ReadyTime = 0.0f;
 
     public GameObject unityChan;
+
+    public GameObject player;
 
     float chanAngle;
     bool rotaionNormalized = true;
@@ -38,10 +38,12 @@ public class BotBasicData : MonoBehaviour
 
     public Vector3 starting_position;
 
+    public bool IsTestMode = false;
+
     private void Start()
     {
-        targetPosition = transform.position;
-        starting_position = transform.position;
+        targetPosition = BotTransform.position;
+        starting_position = BotTransform.position;
     }
 
     // Update is called once per frame
@@ -94,19 +96,19 @@ public class BotBasicData : MonoBehaviour
 
     public void Move()
     {
-        float distance = Vector3.Distance(transform.position, targetPosition);
+        float distance = Vector3.Distance(BotTransform.position, targetPosition);
 
-        Vector3 speed = (targetPosition - transform.position).normalized * travelVelocity * Time.deltaTime;
-        if(transform.position != targetPosition)
+        Vector3 speed = (targetPosition - BotTransform.position).normalized * travelVelocity * Time.deltaTime;
+        if(BotTransform.position != targetPosition)
         {
             if (distance > speed.magnitude)
             {
-                transform.position += speed;
+                BotTransform.position += speed;
                 isRaning = true;
             }
             else
             {
-                transform.position = targetPosition;
+                BotTransform.position = targetPosition;
                 isRaning = false;
             }
         }
@@ -233,15 +235,59 @@ public class BotBasicData : MonoBehaviour
 
     public void Teleport()
     {
-        transform.position = targetPosition;
+        BotTransform.position = targetPosition;
         isRaning = false;
     }
 
     private void CalculateReadyTime()
     {
-        if (transform.position == targetPosition)
+        if (BotTransform.position == targetPosition)
             ReadyTime += Time.deltaTime;
         else
             ReadyTime = 0.0f;
+    }
+
+    public void ChangeDifficulty(string diff)
+    {
+        if (diff == "Test")
+        {
+            Debug.Log("Test Mode Active");
+            IsTestMode = true;
+            travelVelocity = 20f;
+            player.gameObject.GetComponent<PlayerMovement>().normalSpeed = 18f;
+            return;
+        }
+        else
+            IsTestMode = false;
+        if (diff == "Hard")
+        {
+            Debug.Log("Hard Mode Active");
+            ReadyTimeNeed = 0.3f;
+            AimTimeNeed = 1.1f;
+            MaxAimAccuracy = 0.9f;
+            travelVelocity = 20f;
+            player.gameObject.GetComponent<PlayerMovement>().normalSpeed = 15f;
+            return;
+        }
+        if (diff == "Medium")
+        {
+            Debug.Log("Medium Mode Active");
+            ReadyTimeNeed = 0.5f;
+            AimTimeNeed = 1.6f;
+            MaxAimAccuracy = 0.8f;
+            travelVelocity = 20f;
+            player.gameObject.GetComponent<PlayerMovement>().normalSpeed = 18f;
+            return;
+        }
+        if (diff == "Easy")
+        {
+            Debug.Log("Easy Mode Active");
+            ReadyTimeNeed = 0.5f;
+            AimTimeNeed = 2.0f;
+            MaxAimAccuracy = 0.7f;
+            travelVelocity = 15f;
+            player.gameObject.GetComponent<PlayerMovement>().normalSpeed = 18f;
+            return;
+        }
     }
 }
