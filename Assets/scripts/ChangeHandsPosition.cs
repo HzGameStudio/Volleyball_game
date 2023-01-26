@@ -11,7 +11,7 @@ public class ChangeHandsPosition : MonoBehaviour
 
     public GameObject BottomHandsPosition;
 
-    public bool positionFlag = false;// flase TopPosition, true BottomPosition
+    public static bool positionFlag = false;// flase TopPosition, true BottomPosition
 
     // Update is called once per frame
     void Update()
@@ -31,4 +31,13 @@ public class ChangeHandsPosition : MonoBehaviour
             positionFlag = true;
         }
     }
+
+    //to fix my beloved animations
+    /*private void Awake()
+    {
+        BottomHandsPosition.SetActive(false);
+        TopHandsPosition.SetActive(true);
+        TopHandsAnimetionTools.SetActive(true);
+        positionFlag = false;
+    }*/
 }

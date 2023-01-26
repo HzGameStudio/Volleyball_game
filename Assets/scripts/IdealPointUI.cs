@@ -18,7 +18,7 @@ public class IdealPointUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(script.positionFlag)
+        if(ChangeHandsPosition.positionFlag)
         {
             currentDistance = Vector3.Distance(ball.position, idealPointBottomHandsPosition.position);
         }

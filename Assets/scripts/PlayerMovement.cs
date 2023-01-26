@@ -28,6 +28,9 @@ public class PlayerMovement : MonoBehaviour
 
     public float horizontalMovementMultiplier;
 
+    public GameObject handsModel;
+    public GameObject handsBottomModel;
+
     Vector3 velocity;
     bool isGrounded;
 
@@ -45,13 +48,35 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-            
         }
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x * horizontalMovementMultiplier + transform.forward * z;
+
+        if (move != Vector3.zero)
+        {
+            if(ChangeHandsPosition.positionFlag)
+            {
+                handsBottomModel.GetComponent<TriggerR>().TriggerKick();
+            }
+            else
+            {
+                handsModel.GetComponent<TriggerR>().TriggerKick();
+            }
+        }
+        else
+        {
+            if (ChangeHandsPosition.positionFlag)
+            {
+                handsBottomModel.GetComponent<TriggerR>().Stop();
+            }
+            else
+            {
+                handsModel.GetComponent<TriggerR>().Stop();
+            }
+        }
 
         controller.Move(move * speed * Time.deltaTime);
 

@@ -18,6 +18,10 @@ public class TriggerR : MonoBehaviour
         anim.SetTrigger("Active");
     }
 
+    public void Stop()
+    {
+        anim.SetTrigger("NotActive");
+    }
 
     public void TriggerRun()
     {
