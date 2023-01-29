@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class HandsManagment : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class HandsManagment : MonoBehaviour
     public GameObject LeftArm;
     public GameObject RightArm;
 
+    public GameObject player;
+
     private void Start()
     {
         currentKickForce = 0;
@@ -34,20 +37,30 @@ public class HandsManagment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if(!refilingKick)
+            if (!refilingKick)
             {
                 kickStarded = true;
                 GetRealKickForce();
                 LeftArm.GetComponent<TriggerR>().TriggerKick();
                 RightArm.GetComponent<TriggerR>().TriggerKick();
+
+                currentKickForce = 1800f;
+                Invoke("ForceZero", 0.3f);
             }
-           
+
 
         }
 
+
         TimerCalculate();
+    }
+
+    void ForceZero()
+    {
+        currentKickForce = 0f;
     }
 
     private void TimerCalculate()

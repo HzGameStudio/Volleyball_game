@@ -12,6 +12,7 @@ public class MouseLook : MonoBehaviour
     public GameObject TopHandsPosition;
 
     float xRotation = 0f;
+    public GameObject player;
 
     void Start()
     {
