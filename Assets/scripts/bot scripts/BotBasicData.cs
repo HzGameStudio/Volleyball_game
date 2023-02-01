@@ -113,8 +113,6 @@ public class BotBasicData : MonoBehaviour
         }
     }
 
-    public GameObject deleteLater;
-
     public Vector3 GetFallPointPosotion(Transform ball, Rigidbody rb, float groundY, Vector3 fallPoint)
     {
         float fallAcseleration = 30f;
@@ -197,8 +195,8 @@ public class BotBasicData : MonoBehaviour
             return fallPoint;
         }
 
+        //need some data to calculate Unity chan rotation angle later
         catheuses = new Vector2 ((-newFallPoint.x + unityChan.transform.position.x), (newFallPoint.z - unityChan.transform.position.z));
-        deleteLater.transform.position = newFallPoint;
         rotated = false;
 
         return newFallPoint;

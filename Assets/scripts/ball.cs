@@ -21,6 +21,8 @@ public class ball : MonoBehaviour
     public TextMeshProUGUI PlayerScore;
     float PlayerPoints = 0;
 
+    bool KickedByBot = false;
+
     Vector3 starting_position;
 
     //public FallPointMovment fallPointMovmentScript;
@@ -73,40 +75,9 @@ public class ball : MonoBehaviour
                 
             }
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        isKicked = false;
-    }
-
-    bool onPlatform = false;
-
-    float xMin = -40f;
-    float xMax = -15f;
-    float zMin = -30f;
-    float zMax = 30f;
-    float minHeightWithMiss = 1f;
-    float minHeight = 5f;
-    float maxHeight = 40f;
-    float heightWindow = 10f;
-
-    float gravity = 30f;
-    float xEnd;
-    float zEnd;
-    public float botNerf = 5f;
-
-    public GameObject Bot;
-
-    //public Transform test;
-
-    public GameObject unityChan;
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Wall") && !onPlatform)
+        else if (collision.gameObject.CompareTag("Wall") && !KickedByBot)
         {
-            if(!Bot.GetComponent<BotBasicData>().isRaning)
+            if (!Bot.GetComponent<BotBasicData>().isRaning)
             {
                 if (Bot.GetComponent<BotBasicData>().IsTestMode)
                 {
@@ -160,23 +131,23 @@ public class ball : MonoBehaviour
 
                     // random height, ball can hit the net and miss
                     float shot_height = Random.Range(minHeightWithMiss, maxHeight);
-                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f) ;
+                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
                     Debug.Log("Not Ready");
                 }
 
                 //transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
-                onPlatform = true;
                 whoTached = false;
-                Invoke("NotOnPlatform", 0.1f);
+                KickedByBot = true;
             }
             else
             {
-                if(CheckForOut(transform.position)) //|| !whoTached)
+                if (CheckForOut(transform.position)) //|| !whoTached)
                 {
                     PlayerPoints += 1;
                     PlayerScore.text = PlayerPoints.ToString();
                     RespawneBot();
-                }else
+                }
+                else
                 {
                     BotPoints += 1;
                     BotScore.text = BotPoints.ToString();
@@ -188,8 +159,41 @@ public class ball : MonoBehaviour
 
                 //unityChan.GetComponent<TriggerR>().TriggerSpKick();
             }
-           
+
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        isKicked = false;
+        KickedByBot = false;
+    }
+
+    bool onPlatform = false;
+
+    float xMin = -40f;
+    float xMax = -15f;
+    float zMin = -30f;
+    float zMax = 30f;
+    float minHeightWithMiss = 1f;
+    float minHeight = 5f;
+    float maxHeight = 40f;
+    float heightWindow = 10f;
+
+    float gravity = 30f;
+    float xEnd;
+    float zEnd;
+    public float botNerf = 5f;
+
+    public GameObject Bot;
+
+    //public Transform test;
+
+    public GameObject unityChan;
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
 
         if (collision.gameObject.CompareTag("field") && !onPlatform)
         {
