@@ -27,6 +27,8 @@ public class ball : MonoBehaviour
 
     Vector3 appliedForce;
 
+    public bool whoTached = false; //false bot, true player;
+
     private void Start()
     {
         starting_position = transform.position;
@@ -45,11 +47,13 @@ public class ball : MonoBehaviour
                     appliedForce = collision.gameObject.transform.up * kickForce;
                     rb.AddForce(appliedForce);
                     isKicked = true;
+                    whoTached = true;
                 }
                 //Debug.Log(appliedForce);
                 //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
+                
             }
-           
+            
         }
         else if(collision.CompareTag("bottomHands"))
         {
@@ -62,9 +66,11 @@ public class ball : MonoBehaviour
                     appliedForce = collision.gameObject.transform.up * kickForce;
                     rb.AddForce(appliedForce);
                     isKicked = true;
+                    whoTached = true;
                 }
                 //Debug.Log(appliedForce);  
                 //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
+                
             }
         }
     }
@@ -160,18 +166,23 @@ public class ball : MonoBehaviour
 
                 //transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
                 onPlatform = true;
+                whoTached = false;
                 Invoke("NotOnPlatform", 0.1f);
             }
             else
             {
-                PlayerPoints += 1;
-                PlayerScore.text = PlayerPoints.ToString(); 
-                rb.velocity = new Vector3(0, 0, 0);
-                transform.position = starting_position;
+                if(CheckForOut(transform.position)) //|| !whoTached)
+                {
+                    PlayerPoints += 1;
+                    PlayerScore.text = PlayerPoints.ToString();
+                    RespawneBot();
+                }else
+                {
+                    BotPoints += 1;
+                    BotScore.text = BotPoints.ToString();
+                    RespawneBot();
+                }
 
-                Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
-                Bot.GetComponent<BotBasicData>().Teleport();
-                Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
                 onPlatform = true;
                 Invoke("NotOnPlatform", 0.1f);
 
@@ -182,14 +193,18 @@ public class ball : MonoBehaviour
 
         if (collision.gameObject.CompareTag("field") && !onPlatform)
         {
-            BotPoints += 1;
-            BotScore.text = BotPoints.ToString();
-            rb.velocity = new Vector3(0, 0, 0);
-            transform.position = starting_position;
-
-            Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
-            Bot.GetComponent<BotBasicData>().Teleport();
-            Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
+            if (CheckForOut(transform.position) || whoTached)
+            {
+                BotPoints += 1;
+                BotScore.text = BotPoints.ToString();
+                RespawneBot();
+            }
+            else
+            {
+                PlayerPoints += 1;
+                PlayerScore.text = PlayerPoints.ToString();
+                RespawneBot();
+            }
             onPlatform = true;
             Invoke("NotOnPlatform", 0.1f);
 
@@ -257,5 +272,30 @@ public class ball : MonoBehaviour
         {
             unityChan.GetComponent<TriggerR>().TriggerSpKick();
         }
+    }
+
+    private bool CheckForOut(Vector3 ballCoors)
+    {
+        Vector2 topRightCorner = new Vector2(-30f, 41f);
+        Vector2 bottomLeftCorner = new Vector2(30f, -41f);
+
+        if (ballCoors.x < bottomLeftCorner.x && ballCoors.x > topRightCorner.x)
+        {
+            if(ballCoors.z <= topRightCorner.y && ballCoors.z >= bottomLeftCorner.y) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void RespawneBot()
+    {
+        rb.velocity = new Vector3(0, 0, 0);
+        transform.position = starting_position;
+
+        Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
+        Bot.GetComponent<BotBasicData>().Teleport();
+        Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
     }
 }    
