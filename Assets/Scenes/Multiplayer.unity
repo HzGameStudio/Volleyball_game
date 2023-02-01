@@ -672,7 +672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 1542158221570262227, guid: 0dd1a6caba23dac4cad7decdc1d0fa25, type: 3}
-  ballPrefab: {fileID: 2886329419303845048, guid: 3505dd0dac847254c9b571bb3a74b96e, type: 3}
+  ballPrefab: {fileID: 3006004492383252540, guid: 3505dd0dac847254c9b571bb3a74b96e, type: 3}
   minX: -30
   maxX: 30
   minY: -25

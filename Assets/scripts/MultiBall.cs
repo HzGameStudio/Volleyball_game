@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class MultiBall : MonoBehaviour
 {
+
     public Rigidbody rb;
     public float kickForce = 10f;
 
@@ -68,10 +70,8 @@ public class MultiBall : MonoBehaviour
         
         if (collision.gameObject.CompareTag("field"))
         {
-            rb.velocity = new Vector3(0, 0, 0);
-            transform.position = starting_position;
-
-            //unityChan.GetComponent<TriggerR>().TriggerSpKick();
+            Vector3 cords = new Vector3(21f, 40f, 0f);
+            gameObject.transform.position = cords;
         }
     }
 

@@ -20,8 +20,13 @@ public class SpawnPlayers : MonoBehaviour
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
-            Vector3 cords = new Vector3(21f, 40f, 0f);
-            PhotonNetwork.Instantiate(ballPrefab.name, cords, Quaternion.identity);
+            SpawnBall();
         }
+    }
+
+    public void SpawnBall()
+    {
+        Vector3 cords = new Vector3(21f, 40f, 0f);
+        PhotonNetwork.Instantiate(ballPrefab.name, cords, Quaternion.identity);
     }
 }
