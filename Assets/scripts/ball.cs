@@ -154,9 +154,6 @@ public class ball : MonoBehaviour
                     RespawneBot();
                 }
 
-                onPlatform = true;
-                Invoke("NotOnPlatform", 0.1f);
-
                 //unityChan.GetComponent<TriggerR>().TriggerSpKick();
             }
 
