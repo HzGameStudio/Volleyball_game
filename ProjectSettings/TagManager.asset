@@ -9,6 +9,7 @@ TagManager:
   - bottomHands
   - field
   - animtr
+  - BotKickArea
   layers:
   - Default
   - TransparentFX

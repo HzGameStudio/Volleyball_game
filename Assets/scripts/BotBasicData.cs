@@ -8,7 +8,7 @@ public class BotBasicData : MonoBehaviour
 {
     public GameObject ball;
 
-
+    public float kickRadius;
     public Transform BotTransform;
     public Vector3 targetPosition;
 
@@ -16,6 +16,7 @@ public class BotBasicData : MonoBehaviour
 
     public float travelVelocity;
     public float timeOfReaction;
+
 
     public float handsHeidht;
 
@@ -127,7 +128,7 @@ public class BotBasicData : MonoBehaviour
         //Debug.Log("bot coors" + ball.position.ToString());
         //Debug.Log("Bot" + Time.timeSinceLevelLoad);
 
-        groundY = 24.7f + 1.5f;
+        //groundY = 24.7f + 1.5f;
 
         float x, y, z;
         x = ball.position.x;
@@ -166,7 +167,7 @@ public class BotBasicData : MonoBehaviour
                 }
             }
            
-            newFallPoint.y = groundY;
+            newFallPoint.y = BotTransform.position.y;
             newFallPoint.x = x + flyingTime * velocityX;
             newFallPoint.z = z + flyingTime * velocityZ;
         }
@@ -185,7 +186,7 @@ public class BotBasicData : MonoBehaviour
                 return fallPoint;
             }
 
-            newFallPoint.y = groundY;
+            newFallPoint.y = BotTransform.position.y;
             newFallPoint.x = x + flyingTime * velocityX;
             newFallPoint.z = z + flyingTime * velocityZ;
         }

@@ -15,6 +15,8 @@ public class ball : MonoBehaviour
     public Transform bodyAngle;
 
     public bool isKicked = false;
+    private bool isKickedBot = false;
+
 
     public TextMeshProUGUI BotScore;
     float BotPoints = 0;
@@ -73,11 +75,104 @@ public class ball : MonoBehaviour
                 
             }
         }
+        else if (collision.gameObject.CompareTag("Wall") && !onPlatform)
+        {
+            if(!isKickedBot)
+            {
+                if (!Bot.GetComponent<BotBasicData>().isRaning || Vector3.Distance(Bot.GetComponent<BotBasicData>().BotTransform.position, transform.position)<Bot.GetComponent<BotBasicData>().kickRadius)
+                {
+                    isKicked = true;
+                    if (Bot.GetComponent<BotBasicData>().IsTestMode)
+                    {
+                        // throw ball to player
+                        rb.velocity = GetFlySpeed(transform.position, new Vector3(bodyAngle.transform.position.x, 20f, bodyAngle.transform.position.z), 20f + 26.2f);
+                        Debug.Log("Test Mode");
+                    }
+
+                    // if bot is ready too aim his shot
+                    else if (Bot.GetComponent<BotBasicData>().ReadyTime > Bot.GetComponent<BotBasicData>().ReadyTimeNeed)
+                    {
+                        // find the furthest corner from player
+                        float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
+                        int furthest_corner = 0;
+                        for (int i = 1; i < 4; i++)
+                        {
+                            if (Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[i * 2], corners[i * 2 + 1])) > Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[furthest_corner * 2], corners[furthest_corner * 2 + 1])))
+                                furthest_corner = i;
+                        }
+
+                        // find aim_percentage and limit to MaxAimAccuracy
+                        float aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().AimTimeNeed;
+                        aim_percentage = Mathf.Min(aim_percentage, Bot.GetComponent<BotBasicData>().MaxAimAccuracy);
+
+                        // find aim_center:
+                        // add vector going from player to corner multiplied by aim_percentage to player position
+                        Vector3 aim_center = bodyAngle.position + (new Vector3(corners[furthest_corner * 2], 0.0f, corners[furthest_corner * 2 + 1]) - bodyAngle.position) * aim_percentage;
+
+                        // find aim_radius
+                        float aim_radius = Mathf.Min(Mathf.Abs(aim_center.x - xMin), Mathf.Abs(aim_center.x - xMax), Mathf.Abs(aim_center.z - zMin), Mathf.Abs(aim_center.z - zMax));
+
+                        // random point in circle: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly/50746409#50746409
+                        float r = aim_radius * Mathf.Sqrt(Random.value);
+                        float theta = Random.value * 2 * Mathf.PI;
+                        xEnd = aim_center.x + r * Mathf.Cos(theta);
+                        zEnd = aim_center.z + r * Mathf.Sin(theta);
+
+                        float shot_height;
+                        shot_height = Random.Range(Mathf.Max(maxHeight * (1 - aim_percentage), minHeight), Mathf.Max(maxHeight * (1 - aim_percentage) - heightWindow, minHeight));
+
+                        // determine needed velocity
+                        rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
+                        Debug.Log("shot_height: " + shot_height);
+                        Debug.Log("Ready Time: " + Bot.GetComponent<BotBasicData>().ReadyTime);
+                    }
+                    else
+                    {
+                        // random point on field
+                        xEnd = Random.Range(xMin, xMax);
+                        zEnd = Random.Range(zMin, zMax);
+
+                        // random height, ball can hit the net and miss
+                        float shot_height = Random.Range(minHeightWithMiss, maxHeight);
+                        rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
+                        Debug.Log("Not Ready");
+                    }
+
+                    //transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
+                    onPlatform = true;
+                    whoTached = false;
+                    Invoke("NotOnPlatform", 0.1f);
+                }
+                else
+                {
+                    if (CheckForOut(transform.position)) //|| !whoTached)
+                    {
+                        PlayerPoints += 1;
+                        PlayerScore.text = PlayerPoints.ToString();
+                        RespawneBot();
+                    }
+                    else
+                    {
+                        BotPoints += 1;
+                        BotScore.text = BotPoints.ToString();
+                        RespawneBot();
+                    }
+
+                    onPlatform = true;
+                    Invoke("NotOnPlatform", 0.1f);
+
+                    //unityChan.GetComponent<TriggerR>().TriggerSpKick();
+                }
+            }
+            
+
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         isKicked = false;
+        isKickedBot = false;
     }
 
     bool onPlatform = false;
@@ -104,96 +199,11 @@ public class ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Wall") && !onPlatform)
-        {
-            if(!Bot.GetComponent<BotBasicData>().isRaning)
-            {
-                if (Bot.GetComponent<BotBasicData>().IsTestMode)
-                {
-                    // throw ball to player
-                    rb.velocity = GetFlySpeed(transform.position, new Vector3(bodyAngle.transform.position.x, 20f, bodyAngle.transform.position.z), 20f + 26.2f);
-                    Debug.Log("Test Mode");
-                }
-
-                // if bot is ready too aim his shot
-                else if (Bot.GetComponent<BotBasicData>().ReadyTime > Bot.GetComponent<BotBasicData>().ReadyTimeNeed)
-                {
-                    // find the furthest corner from player
-                    float[] corners = { xMin, zMin, xMin, zMax, xMax, zMin, xMax, zMax };
-                    int furthest_corner = 0;
-                    for (int i = 1; i < 4; i++)
-                    {
-                        if (Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[i * 2], corners[i * 2 + 1])) > Vector2.Distance(new Vector2(bodyAngle.position.x, bodyAngle.position.z), new Vector2(corners[furthest_corner * 2], corners[furthest_corner * 2 + 1])))
-                            furthest_corner = i;
-                    }
-
-                    // find aim_percentage and limit to MaxAimAccuracy
-                    float aim_percentage = Bot.GetComponent<BotBasicData>().ReadyTime / Bot.GetComponent<BotBasicData>().AimTimeNeed;
-                    aim_percentage = Mathf.Min(aim_percentage, Bot.GetComponent<BotBasicData>().MaxAimAccuracy);
-
-                    // find aim_center:
-                    // add vector going from player to corner multiplied by aim_percentage to player position
-                    Vector3 aim_center = bodyAngle.position + (new Vector3(corners[furthest_corner * 2], 0.0f, corners[furthest_corner * 2 + 1]) - bodyAngle.position) * aim_percentage;
-
-                    // find aim_radius
-                    float aim_radius = Mathf.Min(Mathf.Abs(aim_center.x - xMin), Mathf.Abs(aim_center.x - xMax), Mathf.Abs(aim_center.z - zMin), Mathf.Abs(aim_center.z - zMax));
-
-                    // random point in circle: https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly/50746409#50746409
-                    float r = aim_radius * Mathf.Sqrt(Random.value);
-                    float theta = Random.value * 2 * Mathf.PI;
-                    xEnd = aim_center.x + r * Mathf.Cos(theta);
-                    zEnd = aim_center.z + r * Mathf.Sin(theta);
-
-                    float shot_height;
-                    shot_height = Random.Range(Mathf.Max(maxHeight * (1 - aim_percentage), minHeight), Mathf.Max(maxHeight * (1 - aim_percentage) - heightWindow, minHeight));
-
-                    // determine needed velocity
-                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
-                    Debug.Log("shot_height: " + shot_height);
-                    Debug.Log("Ready Time: " + Bot.GetComponent<BotBasicData>().ReadyTime);
-                }
-                else
-                {
-                    // random point on field
-                    xEnd = Random.Range(xMin, xMax);
-                    zEnd = Random.Range(zMin, zMax);
-
-                    // random height, ball can hit the net and miss
-                    float shot_height = Random.Range(minHeightWithMiss, maxHeight);
-                    rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f) ;
-                    Debug.Log("Not Ready");
-                }
-
-                //transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
-                onPlatform = true;
-                whoTached = false;
-                Invoke("NotOnPlatform", 0.1f);
-            }
-            else
-            {
-                if(CheckForOut(transform.position)) //|| !whoTached)
-                {
-                    PlayerPoints += 1;
-                    PlayerScore.text = PlayerPoints.ToString();
-                    RespawneBot();
-                }else
-                {
-                    BotPoints += 1;
-                    BotScore.text = BotPoints.ToString();
-                    RespawneBot();
-                }
-
-                onPlatform = true;
-                Invoke("NotOnPlatform", 0.1f);
-
-                //unityChan.GetComponent<TriggerR>().TriggerSpKick();
-            }
-           
-        }
+        
 
         if (collision.gameObject.CompareTag("field") && !onPlatform)
         {
-            if (CheckForOut(transform.position) || whoTached)
+            if (CheckForOut(transform.position))// || whoTached)
             {
                 BotPoints += 1;
                 BotScore.text = BotPoints.ToString();
@@ -277,11 +287,11 @@ public class ball : MonoBehaviour
     private bool CheckForOut(Vector3 ballCoors)
     {
         Vector2 topRightCorner = new Vector2(-30f, 41f);
-        Vector2 bottomLeftCorner = new Vector2(30f, -41f);
+        Vector2 bottomLeftCorner = new Vector2(30f, -41f);//real (z,x)
 
-        if (ballCoors.x < bottomLeftCorner.x && ballCoors.x > topRightCorner.x)
+        if (ballCoors.z < bottomLeftCorner.x && ballCoors.z > topRightCorner.x)
         {
-            if(ballCoors.z <= topRightCorner.y && ballCoors.z >= bottomLeftCorner.y) 
+            if(ballCoors.y <= topRightCorner.y && ballCoors.y >= bottomLeftCorner.y) 
             {
                 return true;
             }
