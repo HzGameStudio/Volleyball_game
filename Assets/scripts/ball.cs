@@ -75,7 +75,7 @@ public class ball : MonoBehaviour
                 
             }
         }
-        else if (collision.gameObject.CompareTag("Wall") && !KickedByBot)
+        else if (collision.gameObject.CompareTag("Wall") && !KickedByBot && !RoundIsOver)
         {
             if (!Bot.GetComponent<BotBasicData>().isRaning)
             {
@@ -141,18 +141,18 @@ public class ball : MonoBehaviour
             }
             else
             {
-                if (CheckForOut(transform.position)) //|| !whoTached)
-                {
-                    PlayerPoints += 1;
-                    PlayerScore.text = PlayerPoints.ToString();
-                    RespawneBot();
-                }
-                else
-                {
-                    BotPoints += 1;
-                    BotScore.text = BotPoints.ToString();
-                    RespawneBot();
-                }
+                //if (CheckForOut(transform.position)) //|| !whoTached)
+                //{
+                //    PlayerPoints += 1;
+                //    PlayerScore.text = PlayerPoints.ToString();
+                //    RespawneBot();
+                //}
+                //else
+                //{
+                //    BotPoints += 1;
+                //    BotScore.text = BotPoints.ToString();
+                //    RespawneBot();
+                //}
 
                 //unityChan.GetComponent<TriggerR>().TriggerSpKick();
             }
@@ -187,27 +187,75 @@ public class ball : MonoBehaviour
     //public Transform test;
 
     public GameObject unityChan;
+    public float WinDelay;
+    private bool RoundIsOver = false;
+
+    void BotWins()
+    {
+        BotPoints += 1;
+        BotScore.text = BotPoints.ToString();
+        RespawneBot();
+    }
+
+    void PlayerWins()
+    {
+        PlayerPoints += 1;
+        PlayerScore.text = PlayerPoints.ToString();
+        RespawneBot();
+    }
+
+    public RectTransform circle;
+    public GameObject effectUI;
+
+    private Vector3 GetUIcords(Vector3 pos)
+    {
+        Debug.Log(pos);
+        Vector3 circlePos;
+        circlePos.y = pos.x * 0.8f + 30f;
+        circlePos.z = 0f;
+        circlePos.x = 255f - pos.z * 0.8f;
+        return circlePos;
+    }
+
+    void DisableEffect()
+    {
+        effectUI.SetActive(false);
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         
 
-        if (collision.gameObject.CompareTag("field") && !onPlatform)
+        if (collision.gameObject.CompareTag("field") && !RoundIsOver)
         {
-            if (CheckForOut(transform.position) || whoTached)
+            RoundIsOver = true;
+            circle.anchoredPosition = GetUIcords(transform.position);
+            effectUI.SetActive(true);
+            Invoke("DisableEffect", 0.3f);
+
+            if (CheckForOut(transform.position))
             {
-                BotPoints += 1;
-                BotScore.text = BotPoints.ToString();
-                RespawneBot();
+                if (whoTached)
+                {
+                    Invoke("BotWins", WinDelay);
+                }
+                else
+                {
+                    Invoke("PlayerWins", WinDelay);
+                }
             }
             else
             {
-                PlayerPoints += 1;
-                PlayerScore.text = PlayerPoints.ToString();
-                RespawneBot();
+                if (transform.position.x < 0f)
+                {
+                    Invoke("BotWins", WinDelay);
+                }
+                else
+                {
+                    Invoke("PlayerWins", WinDelay);
+                }
             }
             onPlatform = true;
-            Invoke("NotOnPlatform", 0.1f);
 
             //unityChan.GetComponent<TriggerR>().TriggerSpKick();
         }
@@ -269,7 +317,7 @@ public class ball : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("animtr"))
+        if(other.gameObject.CompareTag("animtr") && !RoundIsOver)
         {
             unityChan.GetComponent<TriggerR>().TriggerSpKick();
         }
@@ -298,5 +346,8 @@ public class ball : MonoBehaviour
         Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
         Bot.GetComponent<BotBasicData>().Teleport();
         Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
+
+        RoundIsOver = false;
     }
+
 }    
