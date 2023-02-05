@@ -40,7 +40,7 @@ public class ball : MonoBehaviour
     {
         if (collision.CompareTag("topHands"))
         {
-            if(!isKicked)
+            if (!isKicked)
             {
                 kickForce = collision.gameObject.GetComponent<HandsManagment>().currentKickForce;
                 if (kickForce > 0)
@@ -53,11 +53,11 @@ public class ball : MonoBehaviour
                 }
                 //Debug.Log(appliedForce);
                 //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
-                
+
             }
-            
+
         }
-        else if(collision.CompareTag("bottomHands"))
+        else if (collision.CompareTag("bottomHands"))
         {
             if (!isKicked)
             {
@@ -72,12 +72,12 @@ public class ball : MonoBehaviour
                 }
                 //Debug.Log(appliedForce);  
                 //fallPointMovmentScript.fallPoint.position = fallPointMovmentScript.GetFallPointPosotion();
-                
+
             }
         }
         else if (collision.gameObject.CompareTag("Wall") && !KickedByBot && !RoundIsOver)
         {
-            if (!Bot.GetComponent<BotBasicData>().isRaning)
+            if (Vector3.Distance(Bot.transform.position, transform.position)<=Bot.GetComponent<BotBasicData>().kickRadius)
             {
                 if (Bot.GetComponent<BotBasicData>().IsTestMode)
                 {
@@ -139,24 +139,6 @@ public class ball : MonoBehaviour
                 whoTached = false;
                 KickedByBot = true;
             }
-            else
-            {
-                //if (CheckForOut(transform.position)) //|| !whoTached)
-                //{
-                //    PlayerPoints += 1;
-                //    PlayerScore.text = PlayerPoints.ToString();
-                //    RespawneBot();
-                //}
-                //else
-                //{
-                //    BotPoints += 1;
-                //    BotScore.text = BotPoints.ToString();
-                //    RespawneBot();
-                //}
-
-                //unityChan.GetComponent<TriggerR>().TriggerSpKick();
-            }
-
         }
     }
 
@@ -211,9 +193,9 @@ public class ball : MonoBehaviour
     {
         Debug.Log(pos);
         Vector3 circlePos;
-        circlePos.y = pos.x * 0.8f + 30f +33f;
+        circlePos.y = pos.x * 0.8f + 30f;
         circlePos.z = 0f;
-        circlePos.x = 255f - pos.z * 0.8f + 63f;
+        circlePos.x = 255f - pos.z * 0.8f;
         return circlePos;
     }
 
@@ -224,7 +206,7 @@ public class ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
+
 
         if (collision.gameObject.CompareTag("field") && !RoundIsOver)
         {
@@ -233,7 +215,7 @@ public class ball : MonoBehaviour
             effectUI.SetActive(true);
             Invoke("DisableEffect", 0.3f);
 
-            if (CheckForOut(transform.position))
+            if (!CheckForOut(transform.position))
             {
                 if (whoTached)
                 {
@@ -261,7 +243,7 @@ public class ball : MonoBehaviour
         }
     }
 
-   void NotOnPlatform()
+    void NotOnPlatform()
     {
         onPlatform = false;
     }
@@ -290,7 +272,7 @@ public class ball : MonoBehaviour
         Vector2 netPoint = findIntersetion(new Vector2(10, 0), new Vector2(20, 0), new Vector2(startPoint.z, startPoint.x), new Vector2(finishPoint.z, finishPoint.x));
         float c = netPoint.x;
         netPoint.x = netPoint.y;
-        netPoint.y = c; 
+        netPoint.y = c;
 
         float k1 = Mathf.Sqrt((netPoint.x - startPoint.x) * (netPoint.x - startPoint.x) + (netPoint.y - startPoint.z) * (netPoint.y - startPoint.z));
         //Debug.Log(netPoint);
@@ -303,7 +285,7 @@ public class ball : MonoBehaviour
         float a = (heigthInWorldSpace - finishPoint.y) / ((k1 - k2) * k1);
         float b = -(startPoint.y - finishPoint.y) / k2 - a * k2;
 
-        float velocityK = Mathf.Sqrt(-gravity/(2*a));
+        float velocityK = Mathf.Sqrt(-gravity / (2 * a));
         velocity.y = velocityK * b;
         ////velocity.y = Mathf.Sqrt(heigth * gravity / (2 * (k2 - k1) * k1)) * k2;
 
@@ -317,7 +299,7 @@ public class ball : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("animtr") && !RoundIsOver)
+        if (other.gameObject.CompareTag("animtr") && !RoundIsOver)
         {
             unityChan.GetComponent<TriggerR>().TriggerSpKick();
         }
@@ -328,9 +310,9 @@ public class ball : MonoBehaviour
         Vector2 topRightCorner = new Vector2(-30f, 41f);
         Vector2 bottomLeftCorner = new Vector2(30f, -41f);
 
-        if (ballCoors.x < bottomLeftCorner.x && ballCoors.x > topRightCorner.x)
+        if (ballCoors.z < bottomLeftCorner.x && ballCoors.z > topRightCorner.x)
         {
-            if(ballCoors.z <= topRightCorner.y && ballCoors.z >= bottomLeftCorner.y) 
+            if (ballCoors.x <= topRightCorner.y && ballCoors.x >= bottomLeftCorner.y)
             {
                 return true;
             }
@@ -350,4 +332,4 @@ public class ball : MonoBehaviour
         RoundIsOver = false;
     }
 
-}    
+}

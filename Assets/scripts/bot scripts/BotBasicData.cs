@@ -16,7 +16,7 @@ public class BotBasicData : MonoBehaviour
 
     public float travelVelocity;
     public float timeOfReaction;
-
+    public float kickRadius = 4f;
     public float handsHeidht;
 
     public bool isTimeofReactionRaning = false;
@@ -164,7 +164,7 @@ public class BotBasicData : MonoBehaviour
                 }
             }
            
-            newFallPoint.y = groundY;
+            newFallPoint.y = BotTransform.position.y; 
             newFallPoint.x = x + flyingTime * velocityX;
             newFallPoint.z = z + flyingTime * velocityZ;
         }
@@ -183,7 +183,7 @@ public class BotBasicData : MonoBehaviour
                 return fallPoint;
             }
 
-            newFallPoint.y = groundY;
+            newFallPoint.y = BotTransform.position.y;
             newFallPoint.x = x + flyingTime * velocityX;
             newFallPoint.z = z + flyingTime * velocityZ;
         }
