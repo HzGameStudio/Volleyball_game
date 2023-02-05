@@ -211,9 +211,9 @@ public class ball : MonoBehaviour
     {
         Debug.Log(pos);
         Vector3 circlePos;
-        circlePos.y = pos.x * 0.8f + 30f;
+        circlePos.y = pos.x * 0.8f + 30f +33f;
         circlePos.z = 0f;
-        circlePos.x = 255f - pos.z * 0.8f;
+        circlePos.x = 255f - pos.z * 0.8f + 63f;
         return circlePos;
     }
 
