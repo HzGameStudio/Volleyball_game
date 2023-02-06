@@ -77,13 +77,19 @@ public class ball : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Wall") && !KickedByBot && !RoundIsOver)
         {
-            if (Vector3.Distance(Bot.transform.position, transform.position)<=Bot.GetComponent<BotBasicData>().kickRadius)
+            if (transform.position.y < 27.2f)
+            {
+                Bot.GetComponent<BotBasicData>().GetTargetPoint(20f);
+                Bot.GetComponent<BotBasicData>().Crouch(true);
+            }
+            if (Vector3.Distance(Bot.GetComponent<BotBasicData>().handsCenter.position, transform.position)<=Bot.GetComponent<BotBasicData>().kickRadius && (transform.position.y>=27.2f || transform.position.y<25.5f))
             {
                 if (Bot.GetComponent<BotBasicData>().IsTestMode)
                 {
                     // throw ball to player
                     rb.velocity = GetFlySpeed(transform.position, new Vector3(bodyAngle.transform.position.x, 20f, bodyAngle.transform.position.z), 20f + 26.2f);
-                    Debug.Log("Test Mode");
+                    Bot.GetComponent<BotBasicData>().Crouch(false);
+                    //Debug.Log("Test Mode");
                 }
 
                 // if bot is ready too aim his shot
@@ -120,8 +126,9 @@ public class ball : MonoBehaviour
 
                     // determine needed velocity
                     rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
-                    Debug.Log("shot_height: " + shot_height);
-                    Debug.Log("Ready Time: " + Bot.GetComponent<BotBasicData>().ReadyTime);
+                    //Debug.Log("shot_height: " + shot_height);
+                    // Debug.Log("Ready Time: " + Bot.GetComponent<BotBasicData>().ReadyTime);
+                    Bot.GetComponent<BotBasicData>().Crouch(false);
                 }
                 else
                 {
@@ -132,12 +139,16 @@ public class ball : MonoBehaviour
                     // random height, ball can hit the net and miss
                     float shot_height = Random.Range(minHeightWithMiss, maxHeight);
                     rb.velocity = GetFlySpeed(transform.position, new Vector3(xEnd, 20f, zEnd), shot_height + 26.2f);
-                    Debug.Log("Not Ready");
+                    //Debug.Log("Not Ready");
+                    Bot.GetComponent<BotBasicData>().Crouch(false);
+                    
                 }
 
                 //transform.position = new Vector3(transform.position.x, 26.2f, transform.position.z);
                 whoTached = false;
                 KickedByBot = true;
+
+                Debug.Log(transform.position.y);
             }
         }
     }
@@ -328,6 +339,7 @@ public class ball : MonoBehaviour
         Bot.GetComponent<BotBasicData>().targetPosition = Bot.GetComponent<BotBasicData>().starting_position;
         Bot.GetComponent<BotBasicData>().Teleport();
         Bot.GetComponent<BotBasicData>().ReadyTime = 0.0f;
+        Bot.GetComponent<BotBasicData>().Crouch(false);
 
         RoundIsOver = false;
     }

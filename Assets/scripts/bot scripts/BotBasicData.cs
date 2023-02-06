@@ -10,6 +10,7 @@ public class BotBasicData : MonoBehaviour
 
 
     public Transform BotTransform;
+    public Transform handsCenter;
     public Vector3 targetPosition;
 
     public bool isRaning = false;
@@ -18,6 +19,7 @@ public class BotBasicData : MonoBehaviour
     public float timeOfReaction;
     public float kickRadius = 4f;
     public float handsHeidht;
+    public bool isCrouching = false;
 
     public bool isTimeofReactionRaning = false;
     public float currentTimeOfReaction = 0f;
@@ -36,6 +38,7 @@ public class BotBasicData : MonoBehaviour
     float chanAngle;
     bool rotaionNormalized = true;
     bool rotated = true;
+    
 
     public Vector3 starting_position;
 
@@ -214,7 +217,7 @@ public class BotBasicData : MonoBehaviour
                 isTimeofReactionRaning = false;
                 currentTimeOfReaction = 0f;
                 //do something get target;
-                targetPosition = GetFallPointPosotion(ball.transform, ball.GetComponent<Rigidbody>(), handsHeidht, targetPosition);
+                GetTargetPoint(handsHeidht);
                 //Debug.Log("Change tranget");
 
             }
@@ -288,6 +291,32 @@ public class BotBasicData : MonoBehaviour
             travelVelocity = 15f;
             player.gameObject.GetComponent<PlayerMovement>().normalSpeed = 18f;
             return;
+        }
+    }
+
+    public void GetTargetPoint(float height)
+    {
+        targetPosition = GetFallPointPosotion(ball.transform, ball.GetComponent<Rigidbody>(), height, targetPosition);
+    }
+
+    public void Crouch(bool flag)
+    {
+        if(flag)
+        {
+            if(!isCrouching)
+            {
+                isCrouching = flag;
+                handsCenter.position -= new Vector3(0f, 1f, 0f);
+            }
+            
+        }
+        else
+        {
+            if(isCrouching)
+            {
+                isCrouching = false;
+                handsCenter.position += new Vector3(0f, 1f, 0f);
+            }
         }
     }
 }

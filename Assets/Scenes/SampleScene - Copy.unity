@@ -892,7 +892,7 @@ Transform:
   m_GameObject: {fileID: 134049184}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 25, y: 26.2, z: 1.46}
-  m_LocalScale: {x: 50, y: 4.0451403, z: 100}
+  m_LocalScale: {x: 50, y: 4.6013474, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5874,7 +5874,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 831757873}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.98, y: 2.32, z: 0}
+  m_LocalPosition: {x: -0.72, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7785,12 +7785,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 1826483155}
   BotTransform: {fileID: 1002189493}
+  handsCenter: {fileID: 831757874}
   targetPosition: {x: 21, y: 26.2, z: 0}
   isRaning: 0
   travelVelocity: 20
   timeOfReaction: 0.5
-  kickRadius: 4
+  kickRadius: 3
   handsHeidht: 26.2
+  isCrouching: 0
   isTimeofReactionRaning: 0
   currentTimeOfReaction: 0
   ReadyTimeNeed: 0.3
@@ -13286,7 +13288,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!135 &1826483158
 SphereCollider:
